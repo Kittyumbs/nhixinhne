@@ -55,16 +55,40 @@ npm run dev
 
 ## 🚀 Deployment
 
-### Frontend (Vercel)
+### Frontend (Vercel) ✅
 1. Push code lên GitHub
 2. Connect repository với Vercel
-3. Deploy automatically
+3. **Environment Variables:**
+   ```
+   FIREBASE_API_KEY=AIzaSyBk0GLruKL0GiU_ZZcL8p5O6PtswWapEHE
+   FIREBASE_AUTH_DOMAIN=nhixinhne-a39e2.firebaseapp.com
+   FIREBASE_PROJECT_ID=nhixinhne-a39e2
+   FIREBASE_STORAGE_BUCKET=nhixinhne-a39e2.firebasestorage.app
+   FIREBASE_MESSAGING_SENDER_ID=677175421970
+   FIREBASE_APP_ID=1:677175421970:web:9aa74f064d02f49537fccb
+   FIREBASE_MEASUREMENT_ID=G-H363JEFJ8P
 
-### Backend (Render)
+   GOOGLE_DRIVE_API_KEY=YOUR_API_KEY
+   GOOGLE_DRIVE_CLIENT_ID=1095185262237-0poao0vtu5hvvs4n5on1i4q1p65ipnkl.apps.googleusercontent.com
+   GOOGLE_DRIVE_CLIENT_SECRET=YOUR_CLIENT_SECRET
+   ```
+
+### Backend (Render) ✅
 1. **Connect GitHub** repository
 2. **Build Command**: `npm install`
 3. **Start Command**: `npm start`
-4. **Environment Variables**: Copy từ `.env`
+4. **Environment Variables:**
+   ```bash
+   # Firebase Service Account (JSON string)
+   FIREBASE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"nhixinhne-a39e2",...}
+
+   # Google Drive OAuth
+   GOOGLE_CLIENT_ID=1095185262237-0poao0vtu5hvvs4n5on1i4q1p65ipnkl.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=YOUR_CLIENT_SECRET
+   GOOGLE_REFRESH_TOKEN=1//0gXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+   PORT=10000
+   ```
 
 ## 📋 API Endpoints
 
