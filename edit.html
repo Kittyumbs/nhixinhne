@@ -641,32 +641,57 @@ async function uploadToGoogleDrive(file) {
     }
 }
 
-// Save all data to Firebase
+// Save all data to backend API
 async function saveToFirebase() {
     try {
         // Collect profile data
         const profileName = document.querySelector('input[type="text"][value*="Mẹ Bỉm Sữa Review"]').value;
         const profileBio = document.querySelector('textarea').value;
 
-        // Upload images to Google Drive if selected
         let profileAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2';
-
         let backgroundImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO';
 
-        // Upload images to Google Drive if selected
+        // Upload images to backend if selected
         try {
             if (selectedAvatarFile) {
-                console.log('Uploading avatar to Google Drive...');
-                profileAvatar = await uploadToGoogleDrive(selectedAvatarFile);
-                console.log('Avatar uploaded:', profileAvatar);
+                console.log('Uploading avatar...');
+                const formData = new FormData();
+                formData.append('avatar', selectedAvatarFile);
+
+                const response = await fetch('/api/upload/avatar', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    profileAvatar = result.publicUrl;
+                    console.log('Avatar uploaded:', profileAvatar);
+                } else {
+                    throw new Error('Avatar upload failed');
+                }
             }
+
             if (selectedBackgroundFile) {
-                console.log('Uploading background to Google Drive...');
-                backgroundImage = await uploadToGoogleDrive(selectedBackgroundFile);
-                console.log('Background uploaded:', backgroundImage);
+                console.log('Uploading background...');
+                const formData = new FormData();
+                formData.append('background', selectedBackgroundFile);
+
+                const response = await fetch('/api/upload/background', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    backgroundImage = result.publicUrl;
+                    console.log('Background uploaded:', backgroundImage);
+                } else {
+                    throw new Error('Background upload failed');
+                }
             }
         } catch (uploadError) {
-            console.error('Image upload failed, using defaults:', uploadError);
+            console.error('Image upload failed:', uploadError);
             alert('Upload hình ảnh thất bại. Sẽ sử dụng hình mặc định.');
         }
 
@@ -694,16 +719,25 @@ async function saveToFirebase() {
             lastUpdated: new Date().toISOString()
         };
 
-        // Save to Firebase
-        const docRef = doc(db, "site-data", "main");
-        await setDoc(docRef, siteData);
+        // Save to backend API
+        const response = await fetch('/api/site-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(siteData)
+        });
 
-        console.log("Data saved successfully:", siteData);
-        alert('Đã xuất bản thành công! Trang web sẽ được cập nhật.\n\nLưu ý: Upload hình ảnh sẽ hoạt động sau khi tích hợp Google Drive API.');
+        if (response.ok) {
+            console.log("Data saved successfully:", siteData);
+            alert('Đã xuất bản thành công! Trang web sẽ được cập nhật.');
 
-        // Reset file selections
-        selectedAvatarFile = null;
-        selectedBackgroundFile = null;
+            // Reset file selections
+            selectedAvatarFile = null;
+            selectedBackgroundFile = null;
+        } else {
+            throw new Error('Save failed');
+        }
 
     } catch (error) {
         console.error("Error saving data:", error);

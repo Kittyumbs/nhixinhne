@@ -41,8 +41,8 @@
   window.getDoc = getDoc;
   window.setDoc = setDoc;
 
-  // Load data from Firebase when page loads
-  document.addEventListener('DOMContentLoaded', loadSiteData);
+// Load data from backend API when page loads
+document.addEventListener('DOMContentLoaded', loadSiteData);
 </script>
 <script id="tailwind-config">
         tailwind.config = {
@@ -299,19 +299,17 @@
 // Global variables
 let siteData = null;
 
-// Load site data from Firebase
+// Load site data from backend API
 async function loadSiteData() {
     try {
-        const docRef = doc(db, "site-data", "main");
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            siteData = docSnap.data();
-            console.log("Site data loaded:", siteData);
+        const response = await fetch('/api/site-data');
+        if (response.ok) {
+            siteData = await response.json();
+            console.log("Site data loaded from backend:", siteData);
             updatePageContent();
         } else {
             console.log("No site data found, using defaults");
-            // Use default data if no Firebase data exists
+            // Use default data if no backend data exists
             siteData = {
                 profile: {
                     name: "Mẹ Bắp Review",
@@ -319,51 +317,7 @@ async function loadSiteData() {
                     avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
                 },
                 backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO",
-                categories: [
-                    {
-                        id: 'cat1',
-                        name: 'Sữa & Thực phẩm ăn dặm',
-                        icon: 'baby_changing_station',
-                        description: 'Các loại sữa, bột, bánh ăn dặm',
-                        products: [
-                            {
-                                id: 'prod1',
-                                name: 'Combo Tã Merries Siêu Tiết Kiệm',
-                                link: 'https://shope.ee/merries-promo',
-                                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO',
-                                visible: true
-                            }
-                        ]
-                    },
-                    {
-                        id: 'cat2',
-                        name: 'Đồ chơi thông minh',
-                        icon: 'smart_toy',
-                        description: 'Phát triển tư duy cho bé',
-                        products: []
-                    },
-                    {
-                        id: 'cat3',
-                        name: 'Thời trang cho bé',
-                        icon: 'checkroom',
-                        description: 'Quần áo, giày dép, phụ kiện',
-                        products: []
-                    },
-                    {
-                        id: 'cat4',
-                        name: 'Sức khỏe & Tắm gội',
-                        icon: 'medical_services',
-                        description: 'Dầu gội, sữa tắm, kem dưỡng',
-                        products: []
-                    },
-                    {
-                        id: 'cat5',
-                        name: 'Đồ gia dụng tiện ích',
-                        icon: 'blender',
-                        description: 'Máy xay, máy hút sữa, nôi',
-                        products: []
-                    }
-                ]
+                categories: []
             };
             updatePageContent();
         }
