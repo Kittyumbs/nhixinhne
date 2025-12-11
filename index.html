@@ -10,6 +10,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Firebase SDK -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBk0GLruKL0GiU_ZZcL8p5O6PtswWapEHE",
+    authDomain: "nhixinhne-a39e2.firebaseapp.com",
+    projectId: "nhixinhne-a39e2",
+    storageBucket: "nhixinhne-a39e2.firebasestorage.app",
+    messagingSenderId: "677175421970",
+    appId: "1:677175421970:web:9aa74f064d02f49537fccb",
+    measurementId: "G-H363JEFJ8P"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+  // Initialize Firestore
+  const db = getFirestore(app);
+
+  // Make db available globally
+  window.db = db;
+  window.doc = doc;
+  window.getDoc = getDoc;
+  window.setDoc = setDoc;
+
+  // Load data from Firebase when page loads
+  document.addEventListener('DOMContentLoaded', loadSiteData);
+</script>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -262,7 +296,151 @@
 </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// Global variables
+let siteData = null;
+
+// Load site data from Firebase
+async function loadSiteData() {
+    try {
+        const docRef = doc(db, "site-data", "main");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            siteData = docSnap.data();
+            console.log("Site data loaded:", siteData);
+            updatePageContent();
+        } else {
+            console.log("No site data found, using defaults");
+            // Use default data if no Firebase data exists
+            siteData = {
+                profile: {
+                    name: "Mẹ Bắp Review",
+                    bio: "Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨",
+                    avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
+                },
+                backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO",
+                categories: [
+                    {
+                        id: 'cat1',
+                        name: 'Sữa & Thực phẩm ăn dặm',
+                        icon: 'baby_changing_station',
+                        description: 'Các loại sữa, bột, bánh ăn dặm',
+                        products: [
+                            {
+                                id: 'prod1',
+                                name: 'Combo Tã Merries Siêu Tiết Kiệm',
+                                link: 'https://shope.ee/merries-promo',
+                                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO',
+                                visible: true
+                            }
+                        ]
+                    },
+                    {
+                        id: 'cat2',
+                        name: 'Đồ chơi thông minh',
+                        icon: 'smart_toy',
+                        description: 'Phát triển tư duy cho bé',
+                        products: []
+                    },
+                    {
+                        id: 'cat3',
+                        name: 'Thời trang cho bé',
+                        icon: 'checkroom',
+                        description: 'Quần áo, giày dép, phụ kiện',
+                        products: []
+                    },
+                    {
+                        id: 'cat4',
+                        name: 'Sức khỏe & Tắm gội',
+                        icon: 'medical_services',
+                        description: 'Dầu gội, sữa tắm, kem dưỡng',
+                        products: []
+                    },
+                    {
+                        id: 'cat5',
+                        name: 'Đồ gia dụng tiện ích',
+                        icon: 'blender',
+                        description: 'Máy xay, máy hút sữa, nôi',
+                        products: []
+                    }
+                ]
+            };
+            updatePageContent();
+        }
+    } catch (error) {
+        console.error("Error loading site data:", error);
+        // Use default data on error
+        siteData = {
+            profile: {
+                name: "Mẹ Bắp Review",
+                bio: "Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨",
+                avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
+            },
+            backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO",
+            categories: []
+        };
+        updatePageContent();
+    }
+}
+
+// Update page content with loaded data
+function updatePageContent() {
+    if (!siteData) return;
+
+    // Update profile
+    const profileName = document.querySelector('.text-center[style*="Pacifico"]');
+    const profileBio = document.querySelector('.text-center.max-w-\\[280px\\]');
+    const profileAvatar = document.querySelector('.rounded-full.size-28');
+
+    if (profileName && siteData.profile.name) {
+        profileName.textContent = siteData.profile.name;
+    }
+    if (profileBio && siteData.profile.bio) {
+        profileBio.textContent = siteData.profile.bio;
+    }
+    if (profileAvatar && siteData.profile.avatar) {
+        profileAvatar.style.backgroundImage = `url("${siteData.profile.avatar}")`;
+    }
+
+    // Update background image
+    const backgroundDiv = document.querySelector('.h-48.bg-center');
+    if (backgroundDiv && siteData.backgroundImage) {
+        backgroundDiv.style.backgroundImage = `url("${siteData.backgroundImage}")`;
+    }
+
+    // Update categories
+    const categoriesContainer = document.querySelector('.flex.flex-col.gap-3.px-4.pb-8');
+    if (categoriesContainer && siteData.categories) {
+        categoriesContainer.innerHTML = '';
+
+        siteData.categories.forEach((category, index) => {
+            const categoryBtn = document.createElement('button');
+            categoryBtn.className = 'group flex items-center gap-4 bg-white dark:bg-slate-800 p-3 pr-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all active:scale-[0.98] fade-in open-modal';
+            categoryBtn.style.animationDelay = `${0.2 + index * 0.1}s`;
+            categoryBtn.setAttribute('data-category', category.name);
+
+            categoryBtn.innerHTML = `
+                <div class="text-primary flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 shrink-0 size-12 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">${category.icon}</span>
+                </div>
+                <div class="flex flex-col flex-1">
+                    <p class="text-slate-900 dark:text-white text-base font-bold leading-tight">${category.name}</p>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs">${category.description}</p>
+                </div>
+                <div class="shrink-0 text-slate-400 group-hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </div>
+            `;
+
+            categoriesContainer.appendChild(categoryBtn);
+        });
+    }
+
+    // Re-initialize modal functionality
+    initializeModal();
+}
+
+function initializeModal() {
     const modal = document.getElementById('bottomSheet');
     const closeBtn = document.getElementById('closeModal');
     const categoryTitle = document.getElementById('categoryTitle');
@@ -270,25 +448,72 @@ document.addEventListener('DOMContentLoaded', function() {
 
     openButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const category = this.getAttribute('data-category');
-            categoryTitle.textContent = category;
+            const categoryName = this.getAttribute('data-category');
+            const category = siteData.categories.find(c => c.name === categoryName);
+
+            categoryTitle.textContent = categoryName;
+
+            // Update modal products
+            const productsGrid = document.querySelector('.grid.grid-cols-2.gap-4.p-4.pb-8');
+            if (productsGrid && category.products) {
+                productsGrid.innerHTML = '';
+
+                if (category.products.length === 0) {
+                    productsGrid.innerHTML = `
+                        <div class="col-span-2 text-center py-8 text-gray-500">
+                            <span class="material-symbols-outlined text-4xl mb-2 block">inventory_2</span>
+                            Chưa có sản phẩm nào trong danh mục này
+                        </div>
+                    `;
+                } else {
+                    category.products.forEach(product => {
+                        if (product.visible) {
+                            const productCard = document.createElement('div');
+                            productCard.className = 'group flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-lg hover:shadow-pink-100 dark:hover:shadow-none transition-all duration-300 fade-in';
+
+                            productCard.innerHTML = `
+                                <div class="relative w-full aspect-square bg-slate-50 dark:bg-slate-700 overflow-hidden">
+                                    ${product.image ? `<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style='background-image: url("${product.image}")'></div>` : '<div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-pink-50 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center"><span class="material-symbols-outlined text-4xl text-blue-200">shopping_bag</span></div>'}
+                                </div>
+                                <div class="p-3">
+                                    <h3 class="text-slate-900 dark:text-white text-sm font-bold line-clamp-2 leading-snug">${product.name}</h3>
+                                </div>
+                            `;
+
+                            // Add click handler to open affiliate link
+                            productCard.addEventListener('click', () => {
+                                if (product.link) {
+                                    window.open(product.link, '_blank');
+                                }
+                            });
+
+                            productsGrid.appendChild(productCard);
+                        }
+                    });
+                }
+            }
+
             modal.classList.remove('translate-y-full');
             document.body.style.overflow = 'hidden';
         });
     });
 
-    closeBtn.addEventListener('click', function() {
-        modal.classList.add('translate-y-full');
-        document.body.style.overflow = 'auto';
-    });
-
-    // Close modal when clicking outside
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
             modal.classList.add('translate-y-full');
             document.body.style.overflow = 'auto';
-        }
-    });
-});
+        });
+    }
+
+    // Close modal when clicking outside
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.add('translate-y-full');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
+}
 </script>
 </body></html>
