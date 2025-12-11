@@ -29,6 +29,13 @@
         }
     </script>
 <style>
+        @font-face {
+            font-family: 'Pacifico';
+            src: url('fonts/Pacifico-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         /* Custom Scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 6px;
@@ -43,12 +50,12 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-        
+
         /* Smooth fade in */
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -68,7 +75,7 @@
 </div>
 <div class="flex flex-col items-center justify-center gap-1">
 <div class="flex items-center gap-1.5">
-<p class="text-slate-900 dark:text-white text-[22px] font-bold leading-tight tracking-tight text-center">Mẹ Bắp Review</p>
+<p class="text-slate-900 dark:text-white text-[22px] font-bold leading-tight tracking-tight text-center" style="font-family: 'Pacifico', cursive;">Mẹ Bắp Review</p>
 <span class="material-symbols-outlined text-blue-500 text-[20px]" title="Verified">verified</span>
 </div>
 <p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal text-center max-w-[280px]">Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨</p>
@@ -192,13 +199,6 @@
 </button>
 </div>
 <div class="overflow-y-auto" style="max-height: 66vh;">
-<div class="flex gap-2 p-4 pb-2 overflow-x-auto no-scrollbar">
-<button class="px-4 py-2 rounded-full bg-primary text-white text-sm font-bold whitespace-nowrap shadow-md shadow-pink-200 dark:shadow-none">Tất cả</button>
-<button class="px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium whitespace-nowrap transition-colors">Sữa bột</button>
-<button class="px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium whitespace-nowrap transition-colors">Bánh ăn dặm</button>
-<button class="px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium whitespace-nowrap transition-colors">Vitamin</button>
-<button class="px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium whitespace-nowrap transition-colors">Organic</button>
-</div>
 <div class="grid grid-cols-2 gap-4 p-4 pb-8">
 <div class="group flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-lg hover:shadow-pink-100 dark:hover:shadow-none transition-all duration-300 fade-in">
 <div class="relative w-full aspect-square bg-slate-50 dark:bg-slate-700 overflow-hidden">
