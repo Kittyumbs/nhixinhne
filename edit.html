@@ -104,11 +104,12 @@
 <section class="flex flex-col items-center gap-6">
 <div class="relative group cursor-pointer">
 <div class="w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 shadow-lg overflow-hidden bg-gray-200">
-<img alt="Smiling young woman portrait" class="w-full h-full object-cover" data-alt="Close up portrait of a smiling woman with warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2"/>
+<img id="avatarPreview" alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2"/>
 </div>
-<div class="absolute bottom-0 right-0 bg-primary text-white w-9 h-9 rounded-full flex items-center justify-center shadow-md border-2 border-background-light dark:border-background-dark">
+<div class="absolute bottom-0 right-0 bg-primary text-white w-9 h-9 rounded-full flex items-center justify-center shadow-md border-2 border-background-light dark:border-background-dark cursor-pointer" onclick="document.getElementById('avatarInput').click()">
 <span class="material-symbols-outlined text-lg">photo_camera</span>
 </div>
+<input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
 </div>
 <div class="w-full space-y-4">
 <div class="space-y-1.5">
@@ -129,8 +130,8 @@
                 </h2>
 </div>
 <div class="space-y-4">
-<div class="relative group cursor-pointer">
-<div class="w-full h-32 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-gray-700 dark:to-gray-600 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-500 flex items-center justify-center transition-all group-hover:border-primary">
+<div class="relative group cursor-pointer" onclick="document.getElementById('backgroundInput').click()">
+<div id="backgroundPreview" class="w-full h-32 bg-gradient-to-br from-pink-100 to-purple-100 dark:from-gray-700 dark:to-gray-600 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-500 flex items-center justify-center transition-all group-hover:border-primary">
 <div class="text-center">
 <span class="material-symbols-outlined text-3xl text-gray-400 group-hover:text-primary transition-colors">add_photo_alternate</span>
 <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Nhấn để thay đổi hình nền</p>
@@ -140,13 +141,14 @@
 <span class="material-symbols-outlined text-lg text-gray-600 dark:text-gray-300">edit</span>
 </div>
 </div>
+<input type="file" id="backgroundInput" accept="image/*" class="hidden" onchange="handleBackgroundUpload(event)">
 <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
 <div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
 <span class="material-symbols-outlined text-sm text-primary">info</span>
 </div>
 <p class="text-xs text-gray-600 dark:text-gray-300">Hình nền sẽ hiển thị ở phần đầu trang. Kích thước đề nghị: 1200x400px</p>
 </div>
-</div>
+</input>
 </section>
 <section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-card border border-gray-50 dark:border-gray-700">
 <div class="flex items-center justify-between mb-4">
@@ -213,59 +215,7 @@ Lưu danh mục
 
 <script>
 // Data structures
-let categories = [
-    {
-        id: 'cat1',
-        name: 'Bỉm Sữa',
-        icon: 'child_care',
-        description: 'Các loại bỉm và sữa cho bé',
-        products: [
-            {
-                id: 'prod1',
-                name: 'Bỉm Merries Cộng Miếng',
-                link: 'https://shope.ee/merries-promo',
-                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCr2a-W8tfLDY7TeJAWNrKZf4USlxC17yGssRXldS4YkPj9qPOtiMydX5IQitxEav1V153BPCvDQZuL2LVYF6iuLF8E3VXP0o2Ny_Mlusr1neod08T7ncoi0Ey0jDEiy-LhfY-8z5EtM6gol6W6TA7FeAyPTym3-YZHZtdGJmTZo1sd9N_EQh0_HbpBqzjW1qLdeHdlfwjp0F2XbT_4p2D8VLcPFjp3aENT5fi5yyMqXytUjPDqbBHM8iRug6j_4xYZYmiX0q7j51at',
-                visible: true
-            },
-            {
-                id: 'prod2',
-                name: 'Sữa Bột Meiji Nội Địa Nhật',
-                link: 'https://shope.ee/meiji-milk',
-                image: '',
-                visible: true
-            }
-        ]
-    },
-    {
-        id: 'cat2',
-        name: 'Đồ Chơi',
-        icon: 'toys',
-        description: 'Đồ chơi phát triển trí tuệ',
-        products: [
-            {
-                id: 'prod3',
-                name: 'Xe đồ chơi gỗ tự nhiên',
-                link: 'https://shope.ee/wooden-toy-car',
-                image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArPcpA5lVbPopn3dx9XTziH7EWFbA4-X8gjgRuefCKv8zHYtQLJIWcUWsZN9SRFh19y-QSFkW3O4Bs2P_oMeI_O4xhOvv7vG_a4kZVg95CyBsgJvMNuvjrgZX2BPCloLz3RelfZt15Yyvht41A48ATJOdneTlrG895W2PNJXbUe3wMs3u_e5F5tBBN2fYmyp8DsCVdCqmCOwaY1G9Ty-_YgjR3kcnb4c7D-3mFnSRIwLzt7e-QG0_Uqbn6ooghgL73ifoG_uWUBcIt',
-                visible: true
-            }
-        ]
-    },
-    {
-        id: 'cat3',
-        name: 'Ăn Dặm',
-        icon: 'restaurant',
-        description: 'Thực phẩm ăn dặm cho bé',
-        products: []
-    },
-    {
-        id: 'cat4',
-        name: 'Thời Trang',
-        icon: 'checkroom',
-        description: 'Quần áo và phụ kiện cho bé',
-        products: []
-    }
-];
+let categories = [];
 
 let selectedCategoryId = null;
 let editingCategoryId = null;
@@ -548,16 +498,71 @@ function deleteProduct(categoryId, productId) {
     }
 }
 
+// Image upload variables
+let selectedAvatarFile = null;
+let selectedBackgroundFile = null;
+
+// Handle avatar image upload
+function handleAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        selectedAvatarFile = file;
+
+        // Preview image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('avatarPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        console.log('Avatar selected:', file.name);
+        // Note: In production, you would upload to Google Drive here
+        // For now, we'll just show preview
+    }
+}
+
+// Handle background image upload
+function handleBackgroundUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        selectedBackgroundFile = file;
+
+        // Preview image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewDiv = document.getElementById('backgroundPreview');
+            previewDiv.style.backgroundImage = `url("${e.target.result}")`;
+            previewDiv.style.backgroundSize = 'cover';
+            previewDiv.style.backgroundPosition = 'center';
+            previewDiv.innerHTML = ''; // Remove placeholder content
+        };
+        reader.readAsDataURL(file);
+
+        console.log('Background selected:', file.name);
+        // Note: In production, you would upload to Google Drive here
+        // For now, we'll just show preview
+    }
+}
+
 // Save all data to Firebase
 async function saveToFirebase() {
     try {
         // Collect profile data
         const profileName = document.querySelector('input[type="text"][value*="Mẹ Bỉm Sữa Review"]').value;
         const profileBio = document.querySelector('textarea').value;
-        const profileAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2';
 
-        // Use default background for now (can be updated later)
-        const backgroundImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO';
+        // For now, use placeholder URLs (in production, upload to Google Drive)
+        let profileAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2';
+
+        let backgroundImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO';
+
+        // TODO: Upload images to Google Drive and get URLs
+        // if (selectedAvatarFile) {
+        //     profileAvatar = await uploadToGoogleDrive(selectedAvatarFile);
+        // }
+        // if (selectedBackgroundFile) {
+        //     backgroundImage = await uploadToGoogleDrive(selectedBackgroundFile);
+        // }
 
         // Prepare data structure
         const siteData = {
@@ -588,12 +593,23 @@ async function saveToFirebase() {
         await setDoc(docRef, siteData);
 
         console.log("Data saved successfully:", siteData);
-        alert('Đã xuất bản thành công! Trang web sẽ được cập nhật.');
+        alert('Đã xuất bản thành công! Trang web sẽ được cập nhật.\n\nLưu ý: Upload hình ảnh sẽ hoạt động sau khi tích hợp Google Drive API.');
+
+        // Reset file selections
+        selectedAvatarFile = null;
+        selectedBackgroundFile = null;
 
     } catch (error) {
         console.error("Error saving data:", error);
         alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
     }
 }
+
+// TODO: Implement Google Drive upload function
+// async function uploadToGoogleDrive(file) {
+//     // Implement Google Drive API upload here
+//     // Return the public URL of the uploaded file
+//     return 'https://drive.google.com/uc?id=uploaded_file_id';
+// }
 </script>
 </body></html>
