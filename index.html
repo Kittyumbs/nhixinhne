@@ -42,7 +42,68 @@
   window.setDoc = setDoc;
 
 // Load data from backend API when page loads
-document.addEventListener('DOMContentLoaded', loadSiteData);
+document.addEventListener('DOMContentLoaded', loadAllData);
+
+// Load both config and categories data
+async function loadAllData() {
+    console.log('🌐 Loading all site data...');
+
+    try {
+        // Load config data (profile + background)
+        const configResponse = await fetch('/api/site-data');
+        let configData = {
+            profile: {
+                name: "Mẹ Bắp Review",
+                bio: "Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨",
+                avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
+            },
+            backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO"
+        };
+
+        if (configResponse.ok) {
+            configData = await configResponse.json();
+            console.log('✅ Config data loaded:', configData);
+        } else {
+            console.log('⚠️ No config data found, using defaults');
+        }
+
+        // Load categories data
+        const categoriesResponse = await fetch('/api/categories');
+        let categoriesData = { categories: [] };
+
+        if (categoriesResponse.ok) {
+            categoriesData = await categoriesResponse.json();
+            console.log('✅ Categories data loaded:', categoriesData);
+        } else {
+            console.log('⚠️ No categories data found, using empty array');
+        }
+
+        // Combine data for compatibility
+        siteData = {
+            ...configData,
+            categories: categoriesData.categories || []
+        };
+
+        console.log('🎉 All data loaded successfully');
+        updatePageContent();
+
+    } catch (error) {
+        console.error('❌ Error loading site data:', error);
+
+        // Use default data on error
+        siteData = {
+            profile: {
+                name: "Mẹ Bắp Review",
+                bio: "Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨",
+                avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
+            },
+            backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO",
+            categories: []
+        };
+
+        updatePageContent();
+    }
+}
 </script>
 <script id="tailwind-config">
         tailwind.config = {

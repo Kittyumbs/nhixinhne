@@ -207,19 +207,65 @@ app.get('/api/categories', async (req, res) => {
   }
 });
 
-// Save site data
+// Save site data (config + categories)
 app.post('/api/site-data', async (req, res) => {
   try {
-    const siteData = req.body;
-    siteData.lastUpdated = new Date().toISOString();
+    const { profile, backgroundImage, categories } = req.body;
+    const timestamp = new Date().toISOString();
 
-    const docRef = db.collection('site-data').doc('main');
-    await docRef.set(siteData);
+    console.log('💾 Saving site data...');
 
-    res.json({ success: true, message: 'Site data saved successfully' });
+    // Save profile config
+    if (profile) {
+      console.log('📝 Saving profile config...');
+      await db.collection('config').doc('profile').set({
+        ...profile,
+        updatedAt: timestamp
+      });
+    }
+
+    // Save background config
+    if (backgroundImage) {
+      console.log('🖼️ Saving background config...');
+      await db.collection('config').doc('background').set({
+        imageUrl: backgroundImage,
+        updatedAt: timestamp
+      });
+    }
+
+    // Save categories
+    if (categories && Array.isArray(categories)) {
+      console.log(`📂 Saving ${categories.length} categories...`);
+
+      // Delete existing categories first
+      const existingCategories = await db.collection('categories').get();
+      const deletePromises = existingCategories.docs.map(doc => doc.ref.delete());
+      await Promise.all(deletePromises);
+
+      // Save new categories
+      const categoryPromises = categories.map(async (category, index) => {
+        const categoryData = {
+          ...category,
+          createdAt: timestamp,
+          order: index
+        };
+        return db.collection('categories').doc(category.id).set(categoryData);
+      });
+
+      await Promise.all(categoryPromises);
+      console.log('✅ All categories saved');
+    }
+
+    console.log('🎉 Site data saved successfully');
+    res.json({
+      success: true,
+      message: 'Site data saved successfully',
+      timestamp: timestamp
+    });
+
   } catch (error) {
-    console.error('Error saving site data:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('❌ Error saving site data:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
