@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chỉnh Sửa - Mẹ Bắp Affiliate</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ee2b6c",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221016",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        @font-face {
+            font-family: 'Pacifico';
+            src: url('fonts/Pacifico-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* Custom Scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Smooth fade in */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-50 font-display transition-colors duration-200">
+<div class="relative flex h-full w-full max-w-md mx-auto flex-col group/design-root overflow-x-hidden shadow-2xl bg-white dark:bg-slate-900 min-h-screen">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-50 flex items-center bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 pb-2 justify-between border-b border-slate-100 dark:border-slate-800">
+<button class="text-slate-700 dark:text-slate-200 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Chỉnh Sửa Thông Tin</h2>
+</div>
+
+<!-- Edit Form -->
+<div class="flex flex-col gap-6 p-4 pb-8">
+<!-- Profile Picture Upload -->
+<div class="flex flex-col gap-4 items-center pt-4 fade-in">
+<div class="relative group cursor-pointer">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-28 border-4 border-white dark:border-slate-800 shadow-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-slate-400">person</span>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-primary text-white rounded-full p-2 shadow-lg">
+<span class="material-symbols-outlined text-[18px]">camera_alt</span>
+</div>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm text-center">Nhấn để thay đổi ảnh đại diện</p>
+</div>
+
+<!-- Form Fields -->
+<div class="flex flex-col gap-4 fade-in" style="animation-delay: 0.1s;">
+<!-- Profile Name -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-900 dark:text-white text-sm font-bold">Tên hiển thị</label>
+<input type="text" value="Mẹ Bắp Review" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors" placeholder="Nhập tên hiển thị">
+</div>
+
+<!-- Bio/Description -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-900 dark:text-white text-sm font-bold">Mô tả</label>
+<textarea rows="3" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors resize-none" placeholder="Nhập mô tả về bạn">Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨</textarea>
+</div>
+
+<!-- Social Links -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-900 dark:text-white text-sm font-bold">Liên kết mạng xã hội</label>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+<div class="text-blue-500">
+<span class="material-symbols-outlined">public</span>
+</div>
+<input type="url" placeholder="https://facebook.com/yourpage" class="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none" value="">
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+<div class="text-pink-500">
+<span class="material-symbols-outlined">favorite</span>
+</div>
+<input type="url" placeholder="https://instagram.com/yourprofile" class="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none" value="">
+</div>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+<div class="text-purple-500">
+<span class="material-symbols-outlined">send</span>
+</div>
+<input type="url" placeholder="https://tiktok.com/@youraccount" class="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none" value="">
+</div>
+</div>
+</div>
+
+<!-- Contact Email -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-900 dark:text-white text-sm font-bold">Email liên hệ</label>
+<input type="email" placeholder="your@email.com" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors">
+</div>
+
+<!-- Featured Product -->
+<div class="flex flex-col gap-2">
+<label class="text-slate-900 dark:text-white text-sm font-bold">Sản phẩm nổi bật</label>
+<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+<div class="flex flex-col gap-3">
+<input type="text" placeholder="Tên sản phẩm" value="Combo Tã Merries Siêu Tiết Kiệm" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors">
+<textarea rows="2" placeholder="Mô tả sản phẩm" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors resize-none">Săn ngay voucher 10.10 trên Shopee. Số lượng có hạn!</textarea>
+<input type="url" placeholder="Link sản phẩm" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors">
+<div class="flex items-center gap-2">
+<label class="text-slate-700 dark:text-slate-300 text-sm">Giảm giá:</label>
+<input type="text" placeholder="50%" value="50%" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors w-20">
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Action Buttons -->
+<div class="flex gap-3 pt-4 fade-in" style="animation-delay: 0.2s;">
+<button class="flex-1 py-3 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+Hủy
+</button>
+<button class="flex-1 py-3 px-4 rounded-xl bg-primary text-white font-bold hover:bg-pink-600 transition-colors shadow-md shadow-pink-200 dark:shadow-none">
+Lưu thay đổi
+</button>
+</div>
+</div>
+
+<script>
+// Simple form validation and feedback
+document.addEventListener('DOMContentLoaded', function() {
+    const saveBtn = document.querySelector('button:last-child');
+    const inputs = document.querySelectorAll('input, textarea');
+
+    saveBtn.addEventListener('click', function() {
+        // Simple validation
+        let isValid = true;
+        inputs.forEach(input => {
+            if (input.hasAttribute('required') && !input.value.trim()) {
+                input.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                input.classList.remove('border-red-500');
+            }
+        });
+
+        if (isValid) {
+            // Show success message (in a real app, this would save to backend)
+            alert('Thông tin đã được lưu thành công!');
+        } else {
+            alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+        }
+    });
+
+    // Real-time validation
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('border-red-500');
+            }
+        });
+    });
+});
+</script>
+</body></html>
