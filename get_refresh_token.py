@@ -13,8 +13,8 @@ from urllib.parse import parse_qs, urlparse
 import requests
 
 # Configuration
-CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', 'YOUR_GOOGLE_CLIENT_ID')
-CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', 'YOUR_GOOGLE_CLIENT_SECRET')
+CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '1095185262237-qucee3m9nr0l0o7nge77nn36uv7676op.apps.googleusercontent.com')
+CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', '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')
 REDIRECT_PORT = 8080
 REDIRECT_URI = f'http://localhost:{REDIRECT_PORT}'
 
