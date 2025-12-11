@@ -85,14 +85,20 @@ async function getDriveClient() {
 
 // Upload image to Google Drive
 async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
+  console.log('🔄 Starting Google Drive upload...');
+  console.log('📁 File details:', { fileName, mimeType, bufferSize: fileBuffer.length });
+
   try {
+    console.log('🔗 Getting Google Drive client...');
     const drive = await getDriveClient();
+    console.log('✅ Google Drive client obtained');
 
     // Create file metadata
     const fileMetadata = {
       name: fileName,
       parents: [process.env.GOOGLE_DRIVE_FOLDER_ID || 'root'], // Optional: specify folder
     };
+    console.log('📄 File metadata:', fileMetadata);
 
     // Create media for upload
     const media = {
@@ -100,6 +106,7 @@ async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
       body: fileBuffer,
     };
 
+    console.log('⬆️ Uploading file to Google Drive...');
     // Upload file
     const response = await drive.files.create({
       resource: fileMetadata,
@@ -108,7 +115,9 @@ async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
     });
 
     const fileId = response.data.id;
+    console.log('✅ File uploaded successfully, File ID:', fileId);
 
+    console.log('🔓 Setting public permissions...');
     // Make file publicly accessible
     await drive.permissions.create({
       fileId: fileId,
@@ -117,9 +126,11 @@ async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
         type: 'anyone',
       },
     });
+    console.log('✅ Public permissions set');
 
     // Get public URL
     const publicUrl = `https://drive.google.com/uc?id=${fileId}`;
+    console.log('🎉 Upload complete! Public URL:', publicUrl);
 
     return {
       fileId,
@@ -128,7 +139,13 @@ async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
     };
 
   } catch (error) {
-    console.error('Error uploading to Google Drive:', error);
+    console.error('❌ Error uploading to Google Drive:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+      status: error.status
+    });
     throw error;
   }
 }
@@ -208,15 +225,25 @@ app.post('/api/site-data', async (req, res) => {
 
 // Upload avatar
 app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
+  console.log('📥 Avatar upload request received');
+  console.log('📋 Request headers:', req.headers);
+  console.log('📋 Request body:', req.body);
+
   try {
     if (!req.file) {
+      console.log('❌ No file in request');
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
     const file = req.file;
     const fileName = `avatar-${Date.now()}.${file.mimetype.split('/')[1]}`;
 
-    console.log('Uploading avatar:', fileName);
+    console.log('📁 Avatar file details:', {
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size,
+      generatedName: fileName
+    });
 
     const uploadResult = await uploadToGoogleDrive(
       file.buffer,
@@ -224,6 +251,7 @@ app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
       file.mimetype
     );
 
+    console.log('✅ Avatar upload completed successfully');
     res.json({
       success: true,
       fileId: uploadResult.fileId,
@@ -232,22 +260,32 @@ app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error uploading avatar:', error);
-    res.status(500).json({ error: 'Failed to upload avatar' });
+    console.error('❌ Error in avatar upload endpoint:', error);
+    res.status(500).json({ error: 'Failed to upload avatar', details: error.message });
   }
 });
 
 // Upload background image
 app.post('/api/upload/background', upload.single('background'), async (req, res) => {
+  console.log('📥 Background upload request received');
+  console.log('📋 Request headers:', req.headers);
+  console.log('📋 Request body:', req.body);
+
   try {
     if (!req.file) {
+      console.log('❌ No file in request');
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
     const file = req.file;
     const fileName = `background-${Date.now()}.${file.mimetype.split('/')[1]}`;
 
-    console.log('Uploading background:', fileName);
+    console.log('📁 Background file details:', {
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size,
+      generatedName: fileName
+    });
 
     const uploadResult = await uploadToGoogleDrive(
       file.buffer,
@@ -255,6 +293,7 @@ app.post('/api/upload/background', upload.single('background'), async (req, res)
       file.mimetype
     );
 
+    console.log('✅ Background upload completed successfully');
     res.json({
       success: true,
       fileId: uploadResult.fileId,
@@ -263,8 +302,8 @@ app.post('/api/upload/background', upload.single('background'), async (req, res)
     });
 
   } catch (error) {
-    console.error('Error uploading background:', error);
-    res.status(500).json({ error: 'Failed to upload background' });
+    console.error('❌ Error in background upload endpoint:', error);
+    res.status(500).json({ error: 'Failed to upload background', details: error.message });
   }
 });
 

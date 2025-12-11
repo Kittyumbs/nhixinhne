@@ -643,8 +643,18 @@ async function uploadToGoogleDrive(file) {
 
 // Save all data to backend API
 async function saveToFirebase() {
+    console.log('🚀 Starting save process...');
+
     try {
+        console.log('📝 Collecting form data...');
         // Collect profile data
+        console.log('👤 Profile data collected:', { profileName, profileBio });
+        console.log('🖼️ Image files selected:', {
+            avatar: selectedAvatarFile ? selectedAvatarFile.name : 'none',
+            background: selectedBackgroundFile ? selectedBackgroundFile.name : 'none'
+        });
+
+        // Upload images to backend if selected
         const profileName = document.querySelector('input[type="text"][value*="Mẹ Bỉm Sữa Review"]').value;
         const profileBio = document.querySelector('textarea').value;
 
