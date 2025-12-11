@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html class="light" lang="en"><head>
+<html class="light" lang="vi"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Chỉnh Sửa - Mẹ Bắp Affiliate</title>
+<title>Quản Lý Trang Bio</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
@@ -21,42 +21,26 @@
                     fontFamily: {
                         "display": ["Plus Jakarta Sans", "sans-serif"]
                     },
-                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    borderRadius: {
+                        "DEFAULT": "1rem", // 16px
+                        "lg": "1.5rem",    // 24px - Modified for better mobile inputs
+                        "xl": "3rem",      // 48px - Very round
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(238, 43, 108, 0.1)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                    }
                 },
             },
         }
     </script>
-<style>
-        @font-face {
-            font-family: 'Pacifico';
-            src: url('fonts/Pacifico-Regular.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
+<style>.no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-
-        /* Custom Scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
-        /* Smooth fade in */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 <style>
@@ -64,139 +48,210 @@
       min-height: max(884px, 100dvh);
     }
   </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
   </head>
-<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-50 font-display transition-colors duration-200">
-<div class="relative flex h-full w-full max-w-md mx-auto flex-col group/design-root overflow-x-hidden shadow-2xl bg-white dark:bg-slate-900 min-h-screen">
-<!-- Top App Bar -->
-<div class="sticky top-0 z-50 flex items-center bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 pb-2 justify-between border-b border-slate-100 dark:border-slate-800">
-<button class="text-slate-700 dark:text-slate-200 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-<span class="material-symbols-outlined text-[24px]">arrow_back</span>
-</button>
-<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Chỉnh Sửa Thông Tin</h2>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-100 antialiased min-h-screen pb-24">
+<div class="sticky top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+<div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-gray-600 dark:text-gray-300">arrow_back_ios_new</button>
+<h1 class="text-xl font-bold tracking-tight">Quản Lý Bio</h1>
 </div>
-
-<!-- Edit Form -->
-<div class="flex flex-col gap-6 p-4 pb-8">
-<!-- Profile Picture Upload -->
-<div class="flex flex-col gap-4 items-center pt-4 fade-in">
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-gray-500 hover:text-primary transition-colors" title="Xem thử">visibility</button>
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full text-sm font-bold shadow-soft transition-all transform active:scale-95">
+                    Xuất bản
+                </button>
+</div>
+</div>
+</div>
+<div class="max-w-md mx-auto px-4 pt-6 flex flex-col gap-8">
+<section class="flex flex-col items-center gap-6">
 <div class="relative group cursor-pointer">
-<div class="bg-center bg-no-repeat bg-cover rounded-full size-28 border-4 border-white dark:border-slate-800 shadow-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-<span class="material-symbols-outlined text-4xl text-slate-400">person</span>
+<div class="w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 shadow-lg overflow-hidden bg-gray-200">
+<img alt="Smiling young woman portrait" class="w-full h-full object-cover" data-alt="Close up portrait of a smiling woman with warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2"/>
 </div>
-<div class="absolute -bottom-2 -right-2 bg-primary text-white rounded-full p-2 shadow-lg">
-<span class="material-symbols-outlined text-[18px]">camera_alt</span>
-</div>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-sm text-center">Nhấn để thay đổi ảnh đại diện</p>
-</div>
-
-<!-- Form Fields -->
-<div class="flex flex-col gap-4 fade-in" style="animation-delay: 0.1s;">
-<!-- Profile Name -->
-<div class="flex flex-col gap-2">
-<label class="text-slate-900 dark:text-white text-sm font-bold">Tên hiển thị</label>
-<input type="text" value="Mẹ Bắp Review" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors" placeholder="Nhập tên hiển thị">
-</div>
-
-<!-- Bio/Description -->
-<div class="flex flex-col gap-2">
-<label class="text-slate-900 dark:text-white text-sm font-bold">Mô tả</label>
-<textarea rows="3" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors resize-none" placeholder="Nhập mô tả về bạn">Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨</textarea>
-</div>
-
-<!-- Social Links -->
-<div class="flex flex-col gap-2">
-<label class="text-slate-900 dark:text-white text-sm font-bold">Liên kết mạng xã hội</label>
-<div class="flex flex-col gap-3">
-<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-<div class="text-blue-500">
-<span class="material-symbols-outlined">public</span>
-</div>
-<input type="url" placeholder="https://facebook.com/yourpage" class="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none" value="">
-</div>
-<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-<div class="text-pink-500">
-<span class="material-symbols-outlined">favorite</span>
-</div>
-<input type="url" placeholder="https://instagram.com/yourprofile" class="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none" value="">
-</div>
-<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-<div class="text-purple-500">
-<span class="material-symbols-outlined">send</span>
-</div>
-<input type="url" placeholder="https://tiktok.com/@youraccount" class="flex-1 bg-transparent text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none" value="">
+<div class="absolute bottom-0 right-0 bg-primary text-white w-9 h-9 rounded-full flex items-center justify-center shadow-md border-2 border-background-light dark:border-background-dark">
+<span class="material-symbols-outlined text-lg">photo_camera</span>
 </div>
 </div>
+<div class="w-full space-y-4">
+<div class="space-y-1.5">
+<label class="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Tên hiển thị</label>
+<input class="w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-800 border-transparent focus:border-primary focus:ring-0 text-gray-900 dark:text-white font-medium shadow-card placeholder-gray-400" type="text" value="Mẹ Bỉm Sữa Review"/>
 </div>
-
-<!-- Contact Email -->
-<div class="flex flex-col gap-2">
-<label class="text-slate-900 dark:text-white text-sm font-bold">Email liên hệ</label>
-<input type="email" placeholder="your@email.com" class="px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors">
+<div class="space-y-1.5">
+<label class="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Giới thiệu (Bio)</label>
+<textarea class="w-full h-24 p-4 rounded-lg bg-white dark:bg-gray-800 border-transparent focus:border-primary focus:ring-0 text-gray-900 dark:text-white text-sm shadow-card resize-none placeholder-gray-400 leading-relaxed">Chia sẻ kinh nghiệm nuôi dạy con & săn deal hot cho bé yêu 🍼 Follow để nhận voucher mỗi ngày nhé!</textarea>
 </div>
-
-<!-- Featured Product -->
-<div class="flex flex-col gap-2">
-<label class="text-slate-900 dark:text-white text-sm font-bold">Sản phẩm nổi bật</label>
-<div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-<div class="flex flex-col gap-3">
-<input type="text" placeholder="Tên sản phẩm" value="Combo Tã Merries Siêu Tiết Kiệm" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors">
-<textarea rows="2" placeholder="Mô tả sản phẩm" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors resize-none">Săn ngay voucher 10.10 trên Shopee. Số lượng có hạn!</textarea>
-<input type="url" placeholder="Link sản phẩm" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors">
+</div>
+</section>
+<section class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-card border border-gray-50 dark:border-gray-700">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">category</span>
+                    Danh mục
+                </h2>
+<button class="text-primary text-sm font-bold flex items-center gap-1 hover:bg-primary/5 px-2 py-1.5 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-lg">add</span> Thêm mới
+                </button>
+</div>
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-4 snap-x">
+<button class="flex-shrink-0 snap-start bg-primary text-white pl-3 pr-4 py-2 rounded-lg font-bold text-sm shadow-soft ring-2 ring-primary ring-offset-1 ring-offset-white dark:ring-offset-gray-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">child_care</span>
+                    Bỉm Sữa
+                </button>
+<button class="flex-shrink-0 snap-start bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 pl-3 pr-4 py-2 rounded-lg font-semibold text-sm border border-transparent hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">toys</span>
+                    Đồ Chơi
+                </button>
+<button class="flex-shrink-0 snap-start bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 pl-3 pr-4 py-2 rounded-lg font-semibold text-sm border border-transparent hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">restaurant</span>
+                    Ăn Dặm
+                </button>
+<button class="flex-shrink-0 snap-start bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 pl-3 pr-4 py-2 rounded-lg font-semibold text-sm border border-transparent hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">checkroom</span>
+                    Thời Trang
+                </button>
+</div>
+<div class="pt-4 border-t border-dashed border-gray-200 dark:border-gray-700 space-y-5">
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Chọn Icon</label>
+<button class="text-xs text-primary font-bold">Xem tất cả</button>
+</div>
+<div class="flex gap-3 overflow-x-auto no-scrollbar py-1">
+<div class="relative group cursor-pointer shrink-0">
+<div class="w-12 h-12 rounded-xl bg-primary/10 border-2 border-primary flex items-center justify-center text-primary transition-all">
+<span class="material-symbols-outlined">child_care</span>
+</div>
+<div class="absolute -top-1 -right-1 w-4 h-4 bg-primary text-white rounded-full flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[10px] font-bold">check</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary cursor-pointer shrink-0 transition-all">
+<span class="material-symbols-outlined">stroller</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary cursor-pointer shrink-0 transition-all">
+<span class="material-symbols-outlined">toys</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary cursor-pointer shrink-0 transition-all">
+<span class="material-symbols-outlined">checkroom</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-700 border border-gray-100 dark:border-gray-600 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary cursor-pointer shrink-0 transition-all">
+<span class="material-symbols-outlined">crib</span>
+</div>
+</div>
+</div>
+<div class="grid gap-4">
+<div class="space-y-1.5">
+<label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Tên danh mục</label>
+<input class="w-full h-11 px-3 rounded-lg bg-gray-50 dark:bg-gray-900 border-transparent focus:border-primary focus:ring-0 text-sm font-bold text-gray-900 dark:text-white transition-all placeholder-gray-400" type="text" value="Bỉm Sữa"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Mô tả (Tùy chọn)</label>
+<input class="w-full h-11 px-3 rounded-lg bg-gray-50 dark:bg-gray-900 border-transparent focus:border-primary focus:ring-0 text-sm font-medium text-gray-900 dark:text-white transition-all placeholder-gray-400" placeholder="Nhập mô tả ngắn cho danh mục..." type="text"/>
+</div>
+</div>
+<div class="flex items-center justify-between gap-3 pt-2">
+<button class="text-gray-400 hover:text-red-500 flex items-center gap-1 pl-1 pr-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-xs font-bold" title="Xóa danh mục">
+<span class="material-symbols-outlined text-lg">delete</span> Xóa
+                    </button>
+<button class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2.5 rounded-lg text-sm font-bold shadow-md hover:opacity-90 transition-opacity flex-1 max-w-[160px]">
+                        Lưu danh mục
+                    </button>
+</div>
+</div>
+</section>
+<section class="space-y-4">
+<h2 class="text-lg font-bold text-gray-900 dark:text-white px-1">Sản phẩm (3)</h2>
+<div class="bg-white dark:bg-gray-800 p-4 rounded-DEFAULT shadow-card flex gap-4 group">
+<div class="shrink-0 w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-lg relative overflow-hidden">
+<img alt="Baby diapers package stack" class="w-full h-full object-cover" data-alt="Stack of white soft baby diapers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr2a-W8tfLDY7TeJAWNrKZf4USlxC17yGssRXldS4YkPj9qPOtiMydX5IQitxEav1V153BPCvDQZuL2LVYF6iuLF8E3VXP0o2Ny_Mlusr1neod08T7ncoi0Ey0jDEiy-LhfY-8z5EtM6gol6W6TA7FeAyPTym3-YZHZtdGJmTZo1sd9N_EQh0_HbpBqzjW1qLdeHdlfwjp0F2XbT_4p2D8VLcPFjp3aENT5fi5yyMqXytUjPDqbBHM8iRug6j_4xYZYmiX0q7j51at"/>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-white">edit</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-2 min-w-0">
+<input class="w-full h-9 px-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border-none focus:ring-1 focus:ring-primary text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400" type="text" value="Bỉm Merries Cộng Miếng"/>
 <div class="flex items-center gap-2">
-<label class="text-slate-700 dark:text-slate-300 text-sm">Giảm giá:</label>
-<input type="text" placeholder="50%" value="50%" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:border-primary focus:outline-none transition-colors w-20">
+<span class="material-symbols-outlined text-gray-400 text-lg">link</span>
+<input class="w-full h-8 px-2 rounded-lg bg-transparent border-none focus:ring-0 p-0 text-xs text-primary font-medium placeholder-gray-400 truncate" type="text" value="https://shope.ee/merries-promo"/>
 </div>
+<div class="flex items-center justify-between mt-auto pt-1">
+<div class="flex items-center gap-2">
+<div class="w-8 h-5 rounded-full bg-primary flex items-center justify-end px-1 cursor-pointer">
+<div class="w-3 h-3 bg-white rounded-full"></div>
 </div>
+<span class="text-xs font-medium text-gray-500">Hiển thị</span>
 </div>
-</div>
-</div>
-
-<!-- Action Buttons -->
-<div class="flex gap-3 pt-4 fade-in" style="animation-delay: 0.2s;">
-<button class="flex-1 py-3 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-Hủy
-</button>
-<button class="flex-1 py-3 px-4 rounded-xl bg-primary text-white font-bold hover:bg-pink-600 transition-colors shadow-md shadow-pink-200 dark:shadow-none">
-Lưu thay đổi
+<button class="text-red-400 hover:text-red-500 p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+<span class="material-symbols-outlined text-xl">delete</span>
 </button>
 </div>
 </div>
+</div>
+<div class="bg-white dark:bg-gray-800 p-4 rounded-DEFAULT shadow-card flex gap-4 group">
+<div class="shrink-0 w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-lg relative overflow-hidden flex items-center justify-center text-gray-300 border-2 border-dashed border-gray-200 dark:border-gray-600">
+<span class="material-symbols-outlined text-3xl">add_a_photo</span>
+</div>
+<div class="flex-1 flex flex-col gap-2 min-w-0">
+<input class="w-full h-9 px-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border-none focus:ring-1 focus:ring-primary text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400" placeholder="Tên sản phẩm..." type="text"/>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-400 text-lg">link</span>
+<input class="w-full h-8 px-2 rounded-lg bg-transparent border-none focus:ring-0 p-0 text-xs text-gray-600 dark:text-gray-300 font-medium placeholder-gray-400" placeholder="Dán link affiliate vào đây..." type="text"/>
+</div>
+<div class="flex items-center justify-between mt-auto pt-1">
+<div class="flex items-center gap-2 opacity-50">
+<div class="w-8 h-5 rounded-full bg-gray-300 flex items-center justify-start px-1 cursor-pointer">
+<div class="w-3 h-3 bg-white rounded-full"></div>
+</div>
+<span class="text-xs font-medium text-gray-500">Ẩn</span>
+</div>
+<button class="text-gray-400 hover:text-red-500 p-1.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 p-4 rounded-DEFAULT shadow-card flex gap-4 group">
+<div class="shrink-0 w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-lg relative overflow-hidden">
+<img alt="Wooden baby toy car" class="w-full h-full object-cover" data-alt="Small wooden toy car on a soft background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArPcpA5lVbPopn3dx9XTziH7EWFbA4-X8gjgRuefCKv8zHYtQLJIWcUWsZN9SRFh19y-QSFkW3O4Bs2P_oMeI_O4xhOvv7vG_a4kZVg95CyBsgJvMNuvjrgZX2BPCloLz3RelfZt15Yyvht41A48ATJOdneTlrG895W2PNJXbUe3wMs3u_e5F5tBBN2fYmyp8DsCVdCqmCOwaY1G9Ty-_YgjR3kcnb4c7D-3mFnSRIwLzt7e-QG0_Uqbn6ooghgL73ifoG_uWUBcIt"/>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-white">edit</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-2 min-w-0">
+<input class="w-full h-9 px-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border-none focus:ring-1 focus:ring-primary text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400" type="text" value="Xe đồ chơi gỗ tự nhiên"/>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-400 text-lg">link</span>
+<input class="w-full h-8 px-2 rounded-lg bg-transparent border-none focus:ring-0 p-0 text-xs text-primary font-medium placeholder-gray-400 truncate" type="text" value="https://shope.ee/wooden-toy-car"/>
+</div>
+<div class="flex items-center justify-between mt-auto pt-1">
+<div class="flex items-center gap-2">
+<div class="w-8 h-5 rounded-full bg-primary flex items-center justify-end px-1 cursor-pointer">
+<div class="w-3 h-3 bg-white rounded-full"></div>
+</div>
+<span class="text-xs font-medium text-gray-500">Hiển thị</span>
+</div>
+<button class="text-red-400 hover:text-red-500 p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<div class="h-24"></div>
+</div>
+<div class="fixed bottom-0 left-0 w-full p-4 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark pointer-events-none flex justify-center z-40">
+<button class="pointer-events-auto bg-gray-900 dark:bg-white text-white dark:text-gray-900 h-14 w-full max-w-sm rounded-lg flex items-center justify-center gap-3 font-bold shadow-xl hover:scale-[1.02] transition-transform active:scale-95">
+<span class="material-symbols-outlined">add</span>
+            Thêm sản phẩm mới
+        </button>
+</div>
 
-<script>
-// Simple form validation and feedback
-document.addEventListener('DOMContentLoaded', function() {
-    const saveBtn = document.querySelector('button:last-child');
-    const inputs = document.querySelectorAll('input, textarea');
-
-    saveBtn.addEventListener('click', function() {
-        // Simple validation
-        let isValid = true;
-        inputs.forEach(input => {
-            if (input.hasAttribute('required') && !input.value.trim()) {
-                input.classList.add('border-red-500');
-                isValid = false;
-            } else {
-                input.classList.remove('border-red-500');
-            }
-        });
-
-        if (isValid) {
-            // Show success message (in a real app, this would save to backend)
-            alert('Thông tin đã được lưu thành công!');
-        } else {
-            alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
-        }
-    });
-
-    // Real-time validation
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
-            if (this.value.trim()) {
-                this.classList.remove('border-red-500');
-            }
-        });
-    });
-});
-</script>
 </body></html>
