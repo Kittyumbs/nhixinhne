@@ -140,27 +140,52 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Get site data
+// Get site data (profile + background)
 app.get('/api/site-data', async (req, res) => {
   try {
-    const docRef = db.collection('site-data').doc('main');
-    const doc = await docRef.get();
+    // Get profile data
+    const profileDoc = await db.collection('config').doc('profile').get();
+    const backgroundDoc = await db.collection('config').doc('background').get();
 
-    if (!doc.exists) {
-      return res.json({
-        profile: {
-          name: "Mẹ Bỉm Sữa Review",
-          bio: "Chia sẻ kinh nghiệm nuôi dạy con & săn deal hot cho bé yêu 🍼 Follow để nhận voucher mỗi ngày nhé!",
-          avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2"
-        },
-        backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO",
-        categories: []
-      });
-    }
+    const profile = profileDoc.exists ? profileDoc.data() : {
+      name: "Mẹ Bỉm Sữa Review",
+      bio: "Chia sẻ kinh nghiệm nuôi dạy con & săn deal hot cho bé yêu 🍼 Follow để nhận voucher mỗi ngày nhé!",
+      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2"
+    };
 
-    res.json(doc.data());
+    const background = backgroundDoc.exists ? backgroundDoc.data() : {
+      imageUrl: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO"
+    };
+
+    res.json({
+      profile: profile,
+      backgroundImage: background.imageUrl
+    });
   } catch (error) {
     console.error('Error getting site data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get categories data
+app.get('/api/categories', async (req, res) => {
+  try {
+    const categoriesSnapshot = await db.collection('categories').get();
+    const categories = [];
+
+    categoriesSnapshot.forEach(doc => {
+      categories.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    // Sort by created date or custom order if available
+    categories.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+    res.json({ categories });
+  } catch (error) {
+    console.error('Error getting categories:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
