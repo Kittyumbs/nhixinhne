@@ -227,19 +227,16 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
+// Initialize app without Google API (uploads handled by backend)
 async function initializeApp() {
-    try {
-        // Initialize Google API first
-        await initGoogleAPI();
-        console.log('App initialized successfully');
-    } catch (error) {
-        console.warn('Google API initialization failed, continuing without upload functionality:', error);
-    }
+    console.log('🚀 Initializing Nhixinhne Admin Dashboard...');
 
-    // Initialize app functionality regardless of Google API status
+    // Initialize app functionality
     loadCategories();
     setupEventListeners();
     renderIconSelector();
+
+    console.log('✅ App initialized successfully');
 }
 
 function setupEventListeners() {
