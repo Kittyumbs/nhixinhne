@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
 """
 Script để lấy Google Refresh Token cho Google Drive API
+Chỉ hiển thị token, không tự động lưu
 Run: python get_refresh_token.py
 """
 
 import os
-import json
 import webbrowser
 import http.server
 import socketserver
 from urllib.parse import parse_qs, urlparse
 import requests
-import base64
 
 # Configuration
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', 'YOUR_GOOGLE_CLIENT_ID')
 CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', 'YOUR_GOOGLE_CLIENT_SECRET')
 REDIRECT_PORT = 8080
 REDIRECT_URI = f'http://localhost:{REDIRECT_PORT}'
-
-SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
 class OAuthHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -41,17 +38,17 @@ class OAuthHandler(http.server.BaseHTTPRequestHandler):
             if tokens:
                 refresh_token = tokens.get('refresh_token')
                 if refresh_token:
-                    print(f"\n🎉 REFRESH TOKEN: {refresh_token}")
+                    print(f"\n🎉 GOOGLE REFRESH TOKEN:")
+                    print(f"🔑 {refresh_token}")
                     print(f"\n📝 Copy token này vào file .env:")
                     print(f"GOOGLE_REFRESH_TOKEN={refresh_token}")
-
-                    # Save to file
-                    save_to_env(refresh_token)
-
-                    html_response = '''<html>
+                    # Display success page
+                    html_response = f'''<html>
 <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
     <h1 style="color: #4CAF50;">✅ Thành công!</h1>
-    <p>Refresh token đã được tạo và lưu vào file .env</p>
+    <p>Refresh token đã được tạo</p>
+    <p><strong>Token:</strong> {refresh_token[:20]}...</p>
+    <p>Kiểm tra console để copy full token</p>
     <p>Bạn có thể đóng cửa sổ này.</p>
 </body>
 </html>'''
@@ -93,18 +90,6 @@ def exchange_code_for_tokens(auth_code):
         print(f"❌ Token exchange failed: {e}")
         return None
 
-def save_to_env(refresh_token):
-    """Save refresh token to .env file"""
-    try:
-        env_content = f"GOOGLE_REFRESH_TOKEN={refresh_token}\n"
-
-        with open('.env', 'a') as f:
-            f.write(env_content)
-
-        print("✅ Đã lưu refresh token vào file .env")
-    except Exception as e:
-        print(f"❌ Không thể lưu vào .env: {e}")
-
 def main():
     print("🚀 Google OAuth Refresh Token Generator")
     print("=" * 50)
@@ -138,7 +123,7 @@ def main():
     print("2. Đăng nhập Google account")
     print("3. Cho phép quyền truy cập Google Drive")
     print("4. Bạn sẽ được redirect về localhost:8080")
-    print("5. Refresh token sẽ được hiển thị và lưu vào .env")
+    print("5. Refresh token sẽ được hiển thị trong console")
 
     # Open browser
     try:
