@@ -647,7 +647,11 @@ async function saveToFirebase() {
 
     try {
         console.log('📝 Collecting form data...');
+
         // Collect profile data
+        const profileName = document.querySelector('input[type="text"][value*="Mẹ Bỉm Sữa Review"]').value;
+        const profileBio = document.querySelector('textarea').value;
+
         console.log('👤 Profile data collected:', { profileName, profileBio });
         console.log('🖼️ Image files selected:', {
             avatar: selectedAvatarFile ? selectedAvatarFile.name : 'none',
@@ -655,8 +659,6 @@ async function saveToFirebase() {
         });
 
         // Upload images to backend if selected
-        const profileName = document.querySelector('input[type="text"][value*="Mẹ Bỉm Sữa Review"]').value;
-        const profileBio = document.querySelector('textarea').value;
 
         let profileAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2';
         let backgroundImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO';
