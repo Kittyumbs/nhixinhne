@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google API Client -->
+<script src="https://apis.google.com/js/api.js"></script>
 <!-- Firebase SDK -->
 <script type="module">
   // Import the functions you need from the SDKs you need
@@ -226,6 +228,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
+    // Initialize Google API
+    initGoogleAPI();
+
+    // Initialize app functionality
     loadCategories();
     setupEventListeners();
     renderIconSelector();
@@ -498,9 +504,31 @@ function deleteProduct(categoryId, productId) {
     }
 }
 
+// Google Drive API variables
+let isGoogleApiLoaded = false;
+
 // Image upload variables
 let selectedAvatarFile = null;
 let selectedBackgroundFile = null;
+
+// Initialize Google API
+function initGoogleAPI() {
+    gapi.load('client:auth2', async () => {
+        try {
+            await gapi.client.init({
+                apiKey: 'AIzaSyBk0GLruKL0GiU_ZZcL8p5O6PtswWapEHE',
+                clientId: '677175421970-abc123def456.apps.googleusercontent.com', // You'll need to replace this
+                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+                scope: 'https://www.googleapis.com/auth/drive.file'
+            });
+
+            isGoogleApiLoaded = true;
+            console.log('Google API initialized successfully');
+        } catch (error) {
+            console.error('Error initializing Google API:', error);
+        }
+    });
+}
 
 // Handle avatar image upload
 function handleAvatarUpload(event) {
@@ -516,8 +544,6 @@ function handleAvatarUpload(event) {
         reader.readAsDataURL(file);
 
         console.log('Avatar selected:', file.name);
-        // Note: In production, you would upload to Google Drive here
-        // For now, we'll just show preview
     }
 }
 
@@ -539,8 +565,63 @@ function handleBackgroundUpload(event) {
         reader.readAsDataURL(file);
 
         console.log('Background selected:', file.name);
-        // Note: In production, you would upload to Google Drive here
-        // For now, we'll just show preview
+    }
+}
+
+// Upload file to Google Drive
+async function uploadToGoogleDrive(file) {
+    if (!isGoogleApiLoaded) {
+        throw new Error('Google API not loaded');
+    }
+
+    try {
+        // Check if user is signed in
+        const authInstance = gapi.auth2.getAuthInstance();
+        if (!authInstance.isSignedIn.get()) {
+            await authInstance.signIn();
+        }
+
+        // Create file metadata
+        const metadata = {
+            name: file.name,
+            mimeType: file.type,
+            parents: ['root'] // Upload to root directory
+        };
+
+        // Create FormData for multipart upload
+        const formData = new FormData();
+        formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+        formData.append('file', file);
+
+        // Upload file
+        const response = await gapi.client.drive.files.create({
+            resource: metadata,
+            media: {
+                mimeType: file.type,
+                body: file
+            }
+        });
+
+        const fileId = response.result.id;
+
+        // Make file publicly accessible
+        await gapi.client.drive.permissions.create({
+            fileId: fileId,
+            resource: {
+                role: 'reader',
+                type: 'anyone'
+            }
+        });
+
+        // Get public URL
+        const publicUrl = `https://drive.google.com/uc?id=${fileId}`;
+
+        console.log('File uploaded successfully:', publicUrl);
+        return publicUrl;
+
+    } catch (error) {
+        console.error('Error uploading to Google Drive:', error);
+        throw error;
     }
 }
 
@@ -551,18 +632,27 @@ async function saveToFirebase() {
         const profileName = document.querySelector('input[type="text"][value*="Mẹ Bỉm Sữa Review"]').value;
         const profileBio = document.querySelector('textarea').value;
 
-        // For now, use placeholder URLs (in production, upload to Google Drive)
+        // Upload images to Google Drive if selected
         let profileAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2';
 
         let backgroundImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO';
 
-        // TODO: Upload images to Google Drive and get URLs
-        // if (selectedAvatarFile) {
-        //     profileAvatar = await uploadToGoogleDrive(selectedAvatarFile);
-        // }
-        // if (selectedBackgroundFile) {
-        //     backgroundImage = await uploadToGoogleDrive(selectedBackgroundFile);
-        // }
+        // Upload images to Google Drive if selected
+        try {
+            if (selectedAvatarFile) {
+                console.log('Uploading avatar to Google Drive...');
+                profileAvatar = await uploadToGoogleDrive(selectedAvatarFile);
+                console.log('Avatar uploaded:', profileAvatar);
+            }
+            if (selectedBackgroundFile) {
+                console.log('Uploading background to Google Drive...');
+                backgroundImage = await uploadToGoogleDrive(selectedBackgroundFile);
+                console.log('Background uploaded:', backgroundImage);
+            }
+        } catch (uploadError) {
+            console.error('Image upload failed, using defaults:', uploadError);
+            alert('Upload hình ảnh thất bại. Sẽ sử dụng hình mặc định.');
+        }
 
         // Prepare data structure
         const siteData = {
