@@ -1,41 +1,35 @@
-// Script để parse Firebase/Google Service Account JSON và tạo .env
+// Script để tạo FIREBASE_SERVICE_ACCOUNT_KEY từ Firebase Service Account JSON
 // Run: node parse-service-account.js <path-to-json-file>
 
 const fs = require('fs');
-const path = require('path');
 
-function parseFirebaseServiceAccount(jsonPath) {
+function createFirebaseServiceAccountKey(jsonPath) {
     try {
         const jsonContent = fs.readFileSync(jsonPath, 'utf8');
         const serviceAccount = JSON.parse(jsonContent);
 
-        const envContent = `# Firebase Admin SDK (Service Account)
-FIREBASE_PROJECT_ID=${serviceAccount.project_id}
-FIREBASE_PRIVATE_KEY_ID=${serviceAccount.private_key_id}
-FIREBASE_PRIVATE_KEY="${serviceAccount.private_key.replace(/\n/g, '\\n')}"
-FIREBASE_CLIENT_EMAIL=${serviceAccount.client_email}
-FIREBASE_CLIENT_ID=${serviceAccount.client_id}
-FIREBASE_CLIENT_X509_CERT_URL=${serviceAccount.client_x509_cert_url}
+        // Tạo .env content với FIREBASE_SERVICE_ACCOUNT_KEY
+        const envContent = `# Firebase Admin SDK - Service Account JSON as string
+FIREBASE_SERVICE_ACCOUNT_KEY=${JSON.stringify(serviceAccount)}
 
-# Google Drive API (Service Account) - dùng cùng service account
-GOOGLE_CLIENT_EMAIL=${serviceAccount.client_email}
-GOOGLE_PRIVATE_KEY="${serviceAccount.private_key.replace(/\n/g, '\\n')}"
-GOOGLE_DRIVE_FOLDER_ID=
+# Google Drive API - OAuth credentials (điền thủ công)
+GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET=YOUR_GOOGLE_CLIENT_SECRET
+GOOGLE_REFRESH_TOKEN=YOUR_GOOGLE_REFRESH_TOKEN
 
 # Server
-PORT=3000
-NODE_ENV=development`;
+PORT=3000`;
 
         fs.writeFileSync('.env', envContent);
-        console.log('✅ Đã tạo file .env từ service account JSON');
-        console.log('🔧 Kiểm tra và điều chỉnh các giá trị nếu cần');
+        console.log('✅ Đã tạo file .env với FIREBASE_SERVICE_ACCOUNT_KEY');
+        console.log('🔧 Bạn cần điền thêm Google Drive OAuth credentials');
 
     } catch (error) {
         console.error('❌ Lỗi khi parse service account JSON:', error.message);
         console.log('\n📝 Cách sử dụng:');
-        console.log('1. Download service account JSON từ Firebase Console');
+        console.log('1. Download Firebase Service Account JSON từ Firebase Console');
         console.log('2. Chạy: node parse-service-account.js path/to/serviceAccount.json');
-        console.log('3. Hoặc copy thủ công các giá trị vào file .env');
+        console.log('3. Điền thêm GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN');
     }
 }
 
@@ -46,10 +40,10 @@ if (jsonFiles.length > 0) {
     const jsonFile = jsonFiles.find(file => file.includes('firebase') || file.includes('service'));
     if (jsonFile) {
         console.log(`📄 Sử dụng file: ${jsonFile}`);
-        parseFirebaseServiceAccount(jsonFile);
+        createFirebaseServiceAccountKey(jsonFile);
     } else {
         console.log('📄 Sử dụng file đầu tiên:', jsonFiles[0]);
-        parseFirebaseServiceAccount(jsonFiles[0]);
+        createFirebaseServiceAccountKey(jsonFiles[0]);
     }
 } else {
     console.log('📄 Không tìm thấy file JSON nào trong thư mục hiện tại');
@@ -61,5 +55,5 @@ if (jsonFiles.length > 0) {
 
 // Nếu có argument từ command line
 if (process.argv[2]) {
-    parseFirebaseServiceAccount(process.argv[2]);
+    createFirebaseServiceAccountKey(process.argv[2]);
 }

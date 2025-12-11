@@ -33,21 +33,16 @@ npm install
 ```
 
 ### 3. Setup environment variables
-Copy `.env.example` to `.env` và điền thông tin:
+Copy nội dung Firebase Service Account JSON và điền vào `.env`:
 
 ```bash
-# Firebase Admin SDK
-FIREBASE_PROJECT_ID=your-project-id
-FIREBASE_PRIVATE_KEY_ID=your-private-key-id
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY\n-----END PRIVATE KEY-----\n"
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project.iam.gserviceaccount.com
-FIREBASE_CLIENT_ID=your-client-id
-FIREBASE_CLIENT_X509_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/...
+# Firebase Admin SDK - Service Account JSON as string
+FIREBASE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"nhixinhne-a39e2",...}
 
-# Google Drive API
-GOOGLE_CLIENT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
-GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_GOOGLE_PRIVATE_KEY\n-----END PRIVATE KEY-----\n"
-GOOGLE_DRIVE_FOLDER_ID=optional-folder-id
+# Google Drive API - OAuth credentials
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_REFRESH_TOKEN=your_google_refresh_token
 
 # Server
 PORT=3000
