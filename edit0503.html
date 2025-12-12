@@ -800,6 +800,32 @@ async function uploadToGoogleDrive(file) {
     }
 }
 
+// Wake up Render server (free tier sleeps when inactive)
+async function wakeUpServer() {
+    console.log('🌅 Waking up Render server...');
+
+    try {
+        const BACKEND_URL = 'https://nhixinhne.onrender.com';
+        const response = await fetch(`${BACKEND_URL}/health`, {
+            method: 'GET',
+            headers: {
+                'Cache-Control': 'no-cache'
+            }
+        });
+
+        if (response.ok) {
+            console.log('✅ Server is awake and responding');
+            return true;
+        } else {
+            console.log('⚠️ Server responded but not OK, will proceed anyway');
+            return true;
+        }
+    } catch (error) {
+        console.log('⚠️ Server wake-up request failed, will proceed anyway:', error.message);
+        return true; // Don't fail the entire process
+    }
+}
+
 // Save all data to backend API
 async function saveToFirebase() {
     // Show loading overlay
@@ -811,6 +837,9 @@ async function saveToFirebase() {
     }
 
     console.log('🚀 Starting save process...');
+
+    // Wake up server first
+    await wakeUpServer();
 
     try {
         console.log('📝 Collecting form data...');
@@ -1018,7 +1047,7 @@ async function saveToFirebase() {
                 document.body.style.overflow = 'auto';
             }
 
-            alert('Đã xuất bản thành công! Trang web sẽ được cập nhật.');
+            showSuccessDialog('Xuất bản thành công!', 'Trang web đã được cập nhật với dữ liệu mới.');
 
             // Reset file selections
             selectedAvatarFile = null;
@@ -1138,6 +1167,36 @@ async function uploadProductImage() {
         console.error('❌ Error uploading product image:', error);
         return null;
     }
+}
+
+// Custom success dialog
+function showSuccessDialog(title, message) {
+    // Create dialog element
+    const dialog = document.createElement('div');
+    dialog.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center';
+    dialog.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl max-w-sm mx-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-3xl text-green-600 dark:text-green-400">check_circle</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">${title}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">${message}</p>
+                <button class="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-xl font-bold transition-colors" onclick="this.closest('.fixed').remove()">
+                    Đã hiểu
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (dialog.parentNode) {
+            dialog.remove();
+        }
+    }, 5000);
 }
 
 // TODO: Implement Google Drive upload function
