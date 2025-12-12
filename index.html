@@ -166,7 +166,7 @@ async function loadAllData() {
     }
   </style>
   </head>
-<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-50 font-display transition-colors duration-200">
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-50 font-display transition-colors duration-200" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO'); background-size: cover; background-position: center; background-attachment: fixed;">
 <div class="relative flex h-full w-full max-w-md mx-auto flex-col group/design-root overflow-x-hidden shadow-2xl bg-white dark:bg-slate-900 min-h-screen">
 <!-- Profile Header -->
 <div class="flex p-4 flex-col gap-4 items-center pt-8 pb-6 bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 fade-in">
@@ -180,25 +180,9 @@ async function loadAllData() {
 <p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal text-center max-w-[280px]">Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨</p>
 </div>
 </div>
-<!-- Featured Card (Hot Deal) -->
-<div class="px-4 pb-4 @container fade-in" style="animation-delay: 0.1s;">
-<div class="flex flex-col items-stretch justify-start rounded-2xl shadow-lg shadow-pink-100 dark:shadow-none bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden transform transition-transform hover:scale-[1.01]">
-<div class="relative w-full h-48 bg-center bg-no-repeat bg-cover" data-alt="Pack of diapers and baby products on a soft pink background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO");'>
-<div class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">
-                        HOT DEAL -50%
-                     </div>
-</div>
-<div class="flex w-full grow flex-col items-stretch justify-center gap-2 p-4">
-<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Combo Tã Merries Siêu Tiết Kiệm</p>
-<div class="flex flex-col gap-3">
-<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Săn ngay voucher 10.10 trên Shopee. Số lượng có hạn!</p>
-<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary hover:bg-pink-600 active:bg-pink-700 text-white text-sm font-bold leading-normal transition-colors shadow-md shadow-pink-200 dark:shadow-none">
-<span class="truncate mr-2">Săn Ngay</span>
-<span class="material-symbols-outlined text-[18px]">shopping_bag</span>
-</button>
-</div>
-</div>
-</div>
+<!-- Featured Card (Key Product) -->
+<div class="px-4 pb-4 @container fade-in" style="animation-delay: 0.1s;" id="featuredCard">
+<!-- Featured card will be dynamically generated -->
 </div>
 <!-- Categories Headline -->
 <div class="px-4 pb-2 pt-2">
@@ -385,11 +369,14 @@ function updatePageContent() {
         profileAvatar.style.backgroundImage = `url("${siteData.profile.avatar}")`;
     }
 
-    // Update background image
-    const backgroundDiv = document.querySelector('.h-48.bg-center');
-    if (backgroundDiv && siteData.backgroundImage) {
-        backgroundDiv.style.backgroundImage = `url("${siteData.backgroundImage}")`;
+    // Update background image for entire page
+    if (siteData.backgroundImage) {
+        document.body.style.backgroundImage = `url("${siteData.backgroundImage}")`;
+        console.log('🎨 Background image updated:', siteData.backgroundImage);
     }
+
+    // Update featured card with key product
+    updateFeaturedCard();
 
     // Update categories
     const categoriesContainer = document.querySelector('.flex.flex-col.gap-3.px-4.pb-8');
@@ -421,6 +408,69 @@ function updatePageContent() {
 
     // Re-initialize modal functionality
     initializeModal();
+}
+
+// Update featured card with key product
+function updateFeaturedCard() {
+    const featuredCardContainer = document.getElementById('featuredCard');
+    if (!featuredCardContainer) return;
+
+    // Find key product across all categories
+    let keyProduct = null;
+    let keyCategory = null;
+
+    for (const category of siteData.categories || []) {
+        const found = category.products?.find(product => product.isKey);
+        if (found) {
+            keyProduct = found;
+            keyCategory = category;
+            break;
+        }
+    }
+
+    if (keyProduct) {
+        console.log('🎯 Key product found:', keyProduct.name, 'in category:', keyCategory.name);
+
+        // Create featured card
+        const featuredCard = document.createElement('div');
+        featuredCard.className = 'flex flex-col items-stretch justify-start rounded-2xl shadow-lg shadow-pink-100 dark:shadow-none bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden transform transition-transform hover:scale-[1.01]';
+
+        featuredCard.innerHTML = `
+            <div class="relative w-full h-48 bg-center bg-no-repeat bg-cover" style='background-image: url("${keyProduct.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO'}");'>
+                <div class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">
+                    HOT DEAL -50%
+                </div>
+            </div>
+            <div class="flex w-full grow flex-col items-stretch justify-center gap-2 p-4">
+                <p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">${keyProduct.name}</p>
+                <div class="flex flex-col gap-3">
+                    <p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Săn ngay deal hot từ ${keyCategory.name}. Nhấn để xem chi tiết!</p>
+                    <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary hover:bg-pink-600 active:bg-pink-700 text-white text-sm font-bold leading-normal transition-colors shadow-md shadow-pink-200 dark:shadow-none key-product-btn" data-link="${keyProduct.link}">
+                        <span class="truncate mr-2">Săn Ngay</span>
+                        <span class="material-symbols-outlined text-[18px]">shopping_bag</span>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Add click handler for the button
+        const keyBtn = featuredCard.querySelector('.key-product-btn');
+        if (keyBtn) {
+            keyBtn.addEventListener('click', () => {
+                const link = keyBtn.getAttribute('data-link');
+                if (link) {
+                    window.open(link, '_blank');
+                }
+            });
+        }
+
+        featuredCardContainer.innerHTML = '';
+        featuredCardContainer.appendChild(featuredCard);
+
+    } else {
+        console.log('⚠️ No key product found, hiding featured card');
+        featuredCardContainer.innerHTML = '';
+    }
 }
 
 function initializeModal() {
