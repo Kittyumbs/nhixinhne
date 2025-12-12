@@ -374,9 +374,10 @@ function createProductCard(product, categoryId) {
     card.innerHTML = `
         <div class="shrink-0 w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-lg relative overflow-hidden">
             ${product.image ? `<img alt="${product.name}" class="w-full h-full object-cover" src="${product.image}">` : '<div class="w-full h-full flex items-center justify-center text-gray-300"><span class="material-symbols-outlined text-3xl">image</span></div>'}
-            <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+            <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onclick="document.getElementById('productImageInput_${product.id}').click()">
                 <span class="material-symbols-outlined text-white">edit</span>
             </div>
+            <input type="file" id="productImageInput_${product.id}" accept="image/*" class="hidden" onchange="handleProductImageUpload(event, '${categoryId}', '${product.id}')">
         </div>
         <div class="flex-1 flex flex-col gap-2 min-w-0">
             <input class="w-full h-9 px-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border-none focus:ring-1 focus:ring-primary text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400" type="text" value="${product.name}" onchange="updateProductName('${categoryId}', '${product.id}', this.value)">
@@ -561,22 +562,69 @@ function updateProductLink(categoryId, productId, newLink) {
     const category = categories.find(c => c.id === categoryId);
     const product = category.products.find(p => p.id === productId);
     product.link = newLink;
+
+    // Auto-extract image from link if it's a known platform
+    if (newLink && !product.image) {
+        const extractedImage = extractImageFromLink(newLink);
+        if (extractedImage) {
+            product.image = extractedImage;
+            console.log('🖼️ Auto-extracted image from link:', extractedImage);
+            showCategoryProducts(categoryId); // Refresh to show new image
+        }
+    }
+}
+
+// Extract image URL from various platforms
+function extractImageFromLink(link) {
+    try {
+        // TikTok - try to get thumbnail (may not work perfectly due to CORS)
+        if (link.includes('tiktok.com')) {
+            // For TikTok, we might need to use a service or accept manual image upload
+            // For now, return null and let user upload manually
+            return null;
+        }
+
+        // YouTube thumbnail
+        const youtubeMatch = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+        if (youtubeMatch) {
+            return `https://img.youtube.com/vi/${youtubeMatch[1]}/maxresdefault.jpg`;
+        }
+
+        // Instagram (basic attempt - may not work)
+        if (link.includes('instagram.com')) {
+            // Instagram requires login for images, so return null
+            return null;
+        }
+
+        // Generic fallback - try to find image in URL (won't work for most cases)
+        return null;
+
+    } catch (error) {
+        console.error('Error extracting image from link:', error);
+        return null;
+    }
 }
 
 function setProductKey(categoryId, productId) {
-    // Clear all key flags first
-    categories.forEach(cat => {
-        cat.products.forEach(prod => {
-            prod.isKey = false;
-        });
-    });
-
-    // Set the selected product as key
     const category = categories.find(c => c.id === categoryId);
     const product = category.products.find(p => p.id === productId);
-    product.isKey = true;
 
-    console.log('🎯 Key product set:', { categoryId, productId, productName: product.name });
+    // If already key, uncheck it (allow off)
+    if (product.isKey) {
+        product.isKey = false;
+        console.log('🎯 Key product unset:', { categoryId, productId, productName: product.name });
+    } else {
+        // Clear all key flags first
+        categories.forEach(cat => {
+            cat.products.forEach(prod => {
+                prod.isKey = false;
+            });
+        });
+
+        // Set the selected product as key
+        product.isKey = true;
+        console.log('🎯 Key product set:', { categoryId, productId, productName: product.name });
+    }
 
     // Refresh the display to show the radio button state
     showCategoryProducts(categoryId);
@@ -902,6 +950,39 @@ async function saveToFirebase() {
         });
         alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
     }
+}
+
+function handleProductImageUpload(event, categoryId, productId) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    console.log('🖼️ Product image selected:', file.name, 'for product:', productId);
+
+    // Preview image immediately
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        // Find and update the product image in the UI
+        const productCard = event.target.closest('.bg-white.dark\\:bg-slate-800');
+        if (productCard) {
+            const imgElement = productCard.querySelector('img');
+            if (imgElement) {
+                imgElement.src = e.target.result;
+            } else {
+                // Replace placeholder with image
+                const imgContainer = productCard.querySelector('.shrink-0.w-24.h-24');
+                if (imgContainer) {
+                    imgContainer.innerHTML = `<img alt="Product image" class="w-full h-full object-cover" src="${e.target.result}">`;
+                }
+            }
+        }
+    };
+    reader.readAsDataURL(file);
+
+    // Store file for later upload during save
+    selectedProductFile = file;
+    editingProductId = productId;
+
+    console.log('📦 Product image stored for upload during save');
 }
 
 // TODO: Implement Google Drive upload function
