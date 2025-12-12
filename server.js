@@ -3,6 +3,7 @@ const cors = require('cors');
 const multer = require('multer');
 const { google } = require('googleapis');
 const admin = require('firebase-admin');
+const { Readable } = require('stream');
 require('dotenv').config();
 
 // Initialize Firebase Admin from service account key
@@ -45,7 +46,6 @@ app.use(cors({
   origin: ['http://localhost:3000', 'https://nhixinhne.vercel.app', 'https://nhixinhne-a39e2.web.app'],
   credentials: true
 }));
-app.use(express.json());
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
@@ -100,10 +100,10 @@ async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
     };
     console.log('📄 File metadata:', fileMetadata);
 
-    // Create media for upload
+    // Create media for upload - convert buffer to readable stream
     const media = {
       mimeType: mimeType,
-      body: fileBuffer,
+      body: Readable.from(fileBuffer),
     };
 
     console.log('⬆️ Uploading file to Google Drive...');
@@ -149,6 +149,9 @@ async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
     throw error;
   }
 }
+
+// Add JSON parsing middleware after multer routes to avoid conflicts
+app.use(express.json());
 
 // Routes
 
