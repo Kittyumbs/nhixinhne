@@ -443,9 +443,11 @@ function saveCategory() {
     const description = descInput.value.trim();
 
     if (!name) {
-        alert('Vui lòng nhập tên danh mục!');
+        alert('Tên danh mục là bắt buộc!');
         return;
     }
+
+    // Description is optional - no validation required
 
     if (editingCategoryId) {
         // Update existing category
@@ -601,6 +603,8 @@ let isGoogleApiLoaded = false;
 // Image upload variables
 let selectedAvatarFile = null;
 let selectedBackgroundFile = null;
+let selectedProductFile = null;
+let editingProductId = null;
 
 // Initialize Google API
 function initGoogleAPI() {
@@ -756,8 +760,6 @@ async function saveToFirebase() {
             background: backgroundImage
         });
 
-        // Upload images to backend if selected
-        console.log('⬆️ [3/6] Starting image upload process...');
         try {
             if (selectedAvatarFile) {
                 console.log('📤 [3.1/6] Uploading avatar to backend...');
