@@ -765,6 +765,14 @@ async function uploadToGoogleDrive(file) {
 
 // Save all data to backend API
 async function saveToFirebase() {
+    // Show loading overlay
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
     console.log('🚀 Starting save process...');
 
     try {
@@ -964,6 +972,15 @@ async function saveToFirebase() {
 
         if (response.ok) {
             console.log("Data saved successfully:", siteData);
+
+            // Hide loading overlay
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+
             alert('Đã xuất bản thành công! Trang web sẽ được cập nhật.');
 
             // Reset file selections
@@ -980,6 +997,15 @@ async function saveToFirebase() {
             stack: error.stack,
             name: error.name
         });
+
+        // Hide loading overlay on error
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
         alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
     }
 }
