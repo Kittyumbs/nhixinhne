@@ -128,13 +128,13 @@ async function uploadToGoogleDrive(fileBuffer, fileName, mimeType) {
     });
     console.log('✅ Public permissions set');
 
-    // Get direct download URL (more reliable than sharing URL)
-    const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-    console.log('🎉 Upload complete! Direct URL:', directUrl);
+    // Get Google Drive hosting URL (more reliable for images)
+    const hostingUrl = `https://lh3.googleusercontent.com/d/${fileId}?authuser=0`;
+    console.log('🎉 Upload complete! Hosting URL:', hostingUrl);
 
     return {
       fileId,
-      publicUrl: directUrl, // Use direct download URL
+      publicUrl: hostingUrl, // Use Google Drive hosting URL
       success: true
     };
 
