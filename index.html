@@ -3,7 +3,8 @@
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Mẹ Bắp Affiliate</title>
+<title>Trang chủ - Mẹ Audi</title>
+<link rel="icon" href="logo/nuttency_96.png" type="image/png"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet"/>
@@ -363,43 +364,7 @@ async function loadAllData() {
 // Global variables
 let siteData = null;
 
-// Load site data from backend API
-async function loadSiteData() {
-    try {
-        const response = await fetch('/api/site-data');
-        if (response.ok) {
-            siteData = await response.json();
-            console.log("Site data loaded from backend:", siteData);
-            updatePageContent();
-        } else {
-            console.log("No site data found, using defaults");
-            // Use default data if no backend data exists
-            siteData = {
-                profile: {
-                    name: "Mẹ Bắp Review",
-                    bio: "Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨",
-                    avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
-                },
-                backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO",
-                categories: []
-            };
-            updatePageContent();
-        }
-    } catch (error) {
-        console.error("Error loading site data:", error);
-        // Use default data on error
-        siteData = {
-            profile: {
-                name: "Mẹ Bắp Review",
-                bio: "Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨",
-                avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
-            },
-            backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO",
-            categories: []
-        };
-        updatePageContent();
-    }
-}
+// Old function removed - using loadAllData() instead
 
 // Update page content with loaded data
 function updatePageContent() {
