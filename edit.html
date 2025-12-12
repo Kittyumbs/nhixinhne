@@ -582,30 +582,52 @@ function updateProductLink(categoryId, productId, newLink) {
 // Extract image URL from various platforms
 function extractImageFromLink(link) {
     try {
+        console.log('🔍 Extracting image from link:', link);
+
         // TikTok - try to get thumbnail (may not work perfectly due to CORS)
         if (link.includes('tiktok.com')) {
-            // For TikTok, we might need to use a service or accept manual image upload
-            // For now, return null and let user upload manually
+            console.log('📱 TikTok link detected - manual upload recommended due to CORS');
             return null;
         }
 
         // YouTube thumbnail
         const youtubeMatch = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
         if (youtubeMatch) {
-            return `https://img.youtube.com/vi/${youtubeMatch[1]}/maxresdefault.jpg`;
+            const thumbnailUrl = `https://img.youtube.com/vi/${youtubeMatch[1]}/maxresdefault.jpg`;
+            console.log('📺 YouTube thumbnail extracted:', thumbnailUrl);
+            return thumbnailUrl;
         }
 
         // Instagram (basic attempt - may not work)
         if (link.includes('instagram.com')) {
-            // Instagram requires login for images, so return null
+            console.log('📸 Instagram link detected - manual upload recommended');
+            return null;
+        }
+
+        // Shopee links (shortened URLs)
+        if (link.includes('shp.ee') || link.includes('shopee.vn') || link.includes('shopee.com')) {
+            console.log('🛒 Shopee link detected - manual upload recommended for product images');
+            return null;
+        }
+
+        // Lazada links
+        if (link.includes('lazada.vn') || link.includes('lazada.com') || link.includes('laz.vn')) {
+            console.log('📦 Lazada link detected - manual upload recommended for product images');
+            return null;
+        }
+
+        // Tiki links
+        if (link.includes('tiki.vn')) {
+            console.log('🛍️ Tiki link detected - manual upload recommended for product images');
             return null;
         }
 
         // Generic fallback - try to find image in URL (won't work for most cases)
+        console.log('❓ Unknown link type - manual upload recommended');
         return null;
 
     } catch (error) {
-        console.error('Error extracting image from link:', error);
+        console.error('❌ Error extracting image from link:', error);
         return null;
     }
 }
