@@ -148,7 +148,7 @@
 <div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
 <span class="material-symbols-outlined text-sm text-primary">info</span>
 </div>
-<p class="text-xs text-gray-600 dark:text-gray-300">Hình nền sẽ hiển thị ở phần đầu trang. Kích thước đề nghị: 1200x400px</p>
+<p class="text-xs text-gray-600 dark:text-gray-300">Hình nền sẽ hiển thị trong khung dọc. Kích thước tối ưu: 400x800px (mobile) hoặc 1200x800px (desktop)</p>
 </div>
 </input>
 </section>
@@ -242,6 +242,10 @@ async function initializeApp() {
     console.log('✅ App initialized successfully');
 }
 
+// Global variables to store existing data
+let existingProfileData = null;
+let existingBackgroundImage = null;
+
 // Load existing data from backend
 async function loadExistingData() {
     console.log('📥 Loading existing data from backend...');
@@ -255,6 +259,10 @@ async function loadExistingData() {
         if (configResponse.ok) {
             const configData = await configResponse.json();
             console.log('✅ Config data loaded:', configData);
+
+            // Store existing data globally
+            existingProfileData = configData.profile || null;
+            existingBackgroundImage = configData.backgroundImage || null;
 
             // Populate profile fields
             if (configData.profile) {
@@ -726,9 +734,12 @@ async function saveToFirebase() {
     try {
         console.log('📝 Collecting form data...');
 
-        // Collect profile data
-        const profileName = document.querySelector('input[type="text"][value*="Mẹ Bỉm Sữa Review"]').value;
-        const profileBio = document.querySelector('textarea').value;
+        // Collect profile data from form inputs
+        const profileNameInput = document.querySelector('input[type="text"]');
+        const profileBioTextarea = document.querySelector('textarea');
+
+        const profileName = profileNameInput ? profileNameInput.value : '';
+        const profileBio = profileBioTextarea ? profileBioTextarea.value : '';
 
         console.log('👤 Profile data collected:', { profileName, profileBio });
         console.log('🖼️ Image files selected:', {
@@ -736,10 +747,14 @@ async function saveToFirebase() {
             background: selectedBackgroundFile ? selectedBackgroundFile.name : 'none'
         });
 
-        // Upload images to backend if selected
+        // Use existing URLs as defaults, only update if new files are uploaded
+        let profileAvatar = existingProfileData?.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2';
+        let backgroundImage = existingBackgroundImage || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO';
 
-        let profileAvatar = 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2';
-        let backgroundImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO';
+        console.log('📋 Using existing URLs as defaults:', {
+            avatar: profileAvatar,
+            background: backgroundImage
+        });
 
         // Upload images to backend if selected
         console.log('⬆️ [3/6] Starting image upload process...');
