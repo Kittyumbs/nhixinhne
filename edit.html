@@ -676,7 +676,9 @@ async function saveToFirebase() {
                 console.log('📦 FormData created with avatar file');
 
                 console.log('🌐 Making API call to /api/upload/avatar...');
-                const response = await fetch('/api/upload/avatar', {
+                // TODO: Update this URL to your Render backend URL
+                const BACKEND_URL = 'https://your-render-backend.onrender.com'; // Replace with actual Render URL
+                const response = await fetch(`${BACKEND_URL}/api/upload/avatar`, {
                     method: 'POST',
                     body: formData
                 });
@@ -709,7 +711,9 @@ async function saveToFirebase() {
                 console.log('📦 FormData created with background file');
 
                 console.log('🌐 Making API call to /api/upload/background...');
-                const response = await fetch('/api/upload/background', {
+                // TODO: Update this URL to your Render backend URL
+                const BACKEND_URL = 'https://your-render-backend.onrender.com'; // Replace with actual Render URL
+                const response = await fetch(`${BACKEND_URL}/api/upload/background`, {
                     method: 'POST',
                     body: formData
                 });
@@ -765,13 +769,18 @@ async function saveToFirebase() {
         };
 
         // Save to backend API
-        const response = await fetch('/api/site-data', {
+        console.log('💾 [5/6] Saving to backend API...');
+        console.log('🌐 Making API call to /api/site-data...');
+        // TODO: Update this URL to your Render backend URL
+        const BACKEND_URL = 'https://your-render-backend.onrender.com'; // Replace with actual Render URL
+        const response = await fetch(`${BACKEND_URL}/api/site-data`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(siteData)
         });
+        console.log('📡 API response received:', { status: response.status, ok: response.ok });
 
         if (response.ok) {
             console.log("Data saved successfully:", siteData);

@@ -49,13 +49,16 @@ async function loadAllData() {
     console.log('🌐 Loading all site data...');
 
     try {
+        // TODO: Update these URLs to your Render backend URL
+        const BACKEND_URL = 'https://nhixinhne.onrender.com'; // Replace with actual Render URL
+
         // Load config data (profile + background)
-        const configResponse = await fetch('/api/site-data');
+        const configResponse = await fetch(`${BACKEND_URL}/api/site-data`);
         let configData = {
             profile: {
                 name: "Mẹ Bắp Review",
                 bio: "Chia sẻ bí quyết và deal hot cho bé yêu 🍼✨",
-                avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-U4NtuOUDHAYfOtCxgSYY1QgP3qflstHo0DUfVC9ioLcCbHwvmMBsnzsaj67yumetumdfLoM7Mfdin-52tlvzJYIa92QhY8obDG8vW9eEmi-zVgphprqQxDhHUvngzyuOPtrZbL9dWVkXYqIFU0516KFXZ_VvzWhMkeww1joQXePvEyCIZbWZLvahU38WEbuINyrX91Dj0D_ejXg9Kh3e1CLQcf-eA9av98wXWXNWQWXPM1z3amluP3IRrzspo4BxSWI9Ml8Y32aT"
+                avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuD4-4nseipxqo0kUCZE9uFM44MdTSYdXZK7Ip6KdlyymxoMUAFfS7Ve06-Q9hHGxjPluC6X1APdZdN4rucbf81eaxjkm_YhmgvFAXw4pcASA-ix8llEXZC5nUN6SacEV2XF_k-dtb9Yva94yHVEtkau6hvENT-rlCm-EdLda-wSIKp47tOJkZDAYu-1VrHNM-2ra5qRFgsaqhl86noxOuc2f75yKQwk7z-_QUC1XkJ0rEhR3XHAN6BLxLkkhAlcI2nDPjqbfeDSZ3h2"
             },
             backgroundImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO"
         };
@@ -68,7 +71,7 @@ async function loadAllData() {
         }
 
         // Load categories data
-        const categoriesResponse = await fetch('/api/categories');
+        const categoriesResponse = await fetch(`${BACKEND_URL}/api/categories`);
         let categoriesData = { categories: [] };
 
         if (categoriesResponse.ok) {
