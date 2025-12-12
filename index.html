@@ -191,73 +191,9 @@ async function loadAllData() {
 <h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight">Danh Mục Sản Phẩm</h2>
 </div>
 </div>
-<!-- Category List -->
-<div class="flex flex-col gap-3 px-4 pb-8">
-<!-- Category Item 1 -->
-<button class="group flex items-center gap-4 bg-white dark:bg-slate-800 p-3 pr-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all active:scale-[0.98] fade-in open-modal" href="#" style="animation-delay: 0.2s;" data-category="Sữa & Thực phẩm ăn dặm">
-<div class="text-primary flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 shrink-0 size-12 group-hover:bg-primary group-hover:text-white transition-colors">
-<span class="material-symbols-outlined">baby_changing_station</span>
-</div>
-<div class="flex flex-col flex-1">
-<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Sữa & Thực phẩm ăn dặm</p>
-<p class="text-slate-500 dark:text-slate-400 text-xs">Các loại sữa, bột, bánh ăn dặm</p>
-</div>
-<div class="shrink-0 text-slate-400 group-hover:text-primary transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</div>
-</button>
-<!-- Category Item 2 -->
-<button class="group flex items-center gap-4 bg-white dark:bg-slate-800 p-3 pr-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all active:scale-[0.98] fade-in open-modal" href="#" style="animation-delay: 0.3s;" data-category="Đồ chơi thông minh">
-<div class="text-primary flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 shrink-0 size-12 group-hover:bg-primary group-hover:text-white transition-colors">
-<span class="material-symbols-outlined">smart_toy</span>
-</div>
-<div class="flex flex-col flex-1">
-<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Đồ chơi thông minh</p>
-<p class="text-slate-500 dark:text-slate-400 text-xs">Phát triển tư duy cho bé</p>
-</div>
-<div class="shrink-0 text-slate-400 group-hover:text-primary transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</div>
-</button>
-<!-- Category Item 3 -->
-<button class="group flex items-center gap-4 bg-white dark:bg-slate-800 p-3 pr-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all active:scale-[0.98] fade-in open-modal" href="#" style="animation-delay: 0.4s;" data-category="Thời trang cho bé">
-<div class="text-primary flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 shrink-0 size-12 group-hover:bg-primary group-hover:text-white transition-colors">
-<span class="material-symbols-outlined">checkroom</span>
-</div>
-<div class="flex flex-col flex-1">
-<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Thời trang cho bé</p>
-<p class="text-slate-500 dark:text-slate-400 text-xs">Quần áo, giày dép, phụ kiện</p>
-</div>
-<div class="shrink-0 text-slate-400 group-hover:text-primary transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</div>
-</button>
-<!-- Category Item 4 -->
-<button class="group flex items-center gap-4 bg-white dark:bg-slate-800 p-3 pr-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all active:scale-[0.98] fade-in open-modal" href="#" style="animation-delay: 0.5s;" data-category="Sức khỏe & Tắm gội">
-<div class="text-primary flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 shrink-0 size-12 group-hover:bg-primary group-hover:text-white transition-colors">
-<span class="material-symbols-outlined">medical_services</span>
-</div>
-<div class="flex flex-col flex-1">
-<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Sức khỏe & Tắm gội</p>
-<p class="text-slate-500 dark:text-slate-400 text-xs">Dầu gội, sữa tắm, kem dưỡng</p>
-</div>
-<div class="shrink-0 text-slate-400 group-hover:text-primary transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</div>
-</button>
-<!-- Category Item 5 -->
-<button class="group flex items-center gap-4 bg-white dark:bg-slate-800 p-3 pr-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all active:scale-[0.98] fade-in open-modal" href="#" style="animation-delay: 0.6s;" data-category="Đồ gia dụng tiện ích">
-<div class="text-primary flex items-center justify-center rounded-xl bg-pink-50 dark:bg-pink-900/20 shrink-0 size-12 group-hover:bg-primary group-hover:text-white transition-colors">
-<span class="material-symbols-outlined">blender</span>
-</div>
-<div class="flex flex-col flex-1">
-<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Đồ gia dụng tiện ích</p>
-<p class="text-slate-500 dark:text-slate-400 text-xs">Máy xay, máy hút sữa, nôi</p>
-</div>
-<div class="shrink-0 text-slate-400 group-hover:text-primary transition-colors">
-<span class="material-symbols-outlined">chevron_right</span>
-</div>
-</button>
+<!-- Category List - Will be populated by JavaScript -->
+<div class="flex flex-col gap-3 px-4 pb-8" id="categoriesContainer">
+<!-- Categories will be loaded from backend -->
 </div>
 <!-- Footer / Contact Action -->
 <div class="mt-auto p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
@@ -383,7 +319,7 @@ function updatePageContent() {
     updateFeaturedCard();
 
     // Update categories
-    const categoriesContainer = document.querySelector('.flex.flex-col.gap-3.px-4.pb-8');
+    const categoriesContainer = document.getElementById('categoriesContainer');
     if (categoriesContainer && siteData.categories) {
         categoriesContainer.innerHTML = '';
 
