@@ -676,8 +676,9 @@ async function saveToFirebase() {
                 console.log('📦 FormData created with avatar file');
 
                 console.log('🌐 Making API call to /api/upload/avatar...');
-                // TODO: Update this URL to your Render backend URL
-                const BACKEND_URL = 'https://your-render-backend.onrender.com'; // Replace with actual Render URL
+                // TODO: Replace with your actual Render backend URL
+                const BACKEND_URL = 'https://your-render-backend.onrender.com';
+                console.log('🔗 Backend URL:', BACKEND_URL);
                 const response = await fetch(`${BACKEND_URL}/api/upload/avatar`, {
                     method: 'POST',
                     body: formData
