@@ -383,7 +383,7 @@ function createProductCard(product, categoryId) {
             <input class="w-full h-9 px-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border-none focus:ring-1 focus:ring-primary text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400" type="text" value="${product.name}" onchange="updateProductName('${categoryId}', '${product.id}', this.value)">
             <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-gray-400 text-lg">link</span>
-                <input class="w-full h-8 px-2 rounded-lg bg-transparent border-none focus:ring-0 p-0 text-xs text-primary font-medium placeholder-gray-400 truncate" type="text" value="${product.link}" onchange="updateProductLink('${categoryId}', '${product.id}', this.value)">
+                <input class="w-full h-9 px-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 focus:border-primary focus:ring-1 focus:ring-primary text-xs text-gray-900 dark:text-white font-medium placeholder-gray-400 transition-all" type="text" value="${product.link}" onchange="updateProductLink('${categoryId}', '${product.id}', this.value)">
             </div>
             <div class="flex items-center justify-between mt-auto pt-1">
                 <div class="flex items-center gap-4">
@@ -564,72 +564,6 @@ function updateProductLink(categoryId, productId, newLink) {
     product.link = newLink;
 
     console.log('🔗 Link updated for product:', productId, 'Link:', newLink);
-
-    // Auto-extract image from link if it's a known platform
-    if (newLink && !product.image) {
-        console.log('🔍 Attempting to extract image from link...');
-        const extractedImage = extractImageFromLink(newLink);
-        if (extractedImage) {
-            console.log('🖼️ Auto-extracted image from link:', extractedImage);
-            product.image = extractedImage;
-            showCategoryProducts(categoryId); // Refresh to show new image
-        } else {
-            console.log('⚠️ Could not auto-extract image from link. User can upload manually.');
-        }
-    }
-}
-
-// Extract image URL from various platforms
-function extractImageFromLink(link) {
-    try {
-        console.log('🔍 Extracting image from link:', link);
-
-        // TikTok - try to get thumbnail (may not work perfectly due to CORS)
-        if (link.includes('tiktok.com')) {
-            console.log('📱 TikTok link detected - manual upload recommended due to CORS');
-            return null;
-        }
-
-        // YouTube thumbnail
-        const youtubeMatch = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-        if (youtubeMatch) {
-            const thumbnailUrl = `https://img.youtube.com/vi/${youtubeMatch[1]}/maxresdefault.jpg`;
-            console.log('📺 YouTube thumbnail extracted:', thumbnailUrl);
-            return thumbnailUrl;
-        }
-
-        // Instagram (basic attempt - may not work)
-        if (link.includes('instagram.com')) {
-            console.log('📸 Instagram link detected - manual upload recommended');
-            return null;
-        }
-
-        // Shopee links (shortened URLs)
-        if (link.includes('shp.ee') || link.includes('shopee.vn') || link.includes('shopee.com')) {
-            console.log('🛒 Shopee link detected - manual upload recommended for product images');
-            return null;
-        }
-
-        // Lazada links
-        if (link.includes('lazada.vn') || link.includes('lazada.com') || link.includes('laz.vn')) {
-            console.log('📦 Lazada link detected - manual upload recommended for product images');
-            return null;
-        }
-
-        // Tiki links
-        if (link.includes('tiki.vn')) {
-            console.log('🛍️ Tiki link detected - manual upload recommended for product images');
-            return null;
-        }
-
-        // Generic fallback - try to find image in URL (won't work for most cases)
-        console.log('❓ Unknown link type - manual upload recommended');
-        return null;
-
-    } catch (error) {
-        console.error('❌ Error extracting image from link:', error);
-        return null;
-    }
 }
 
 function setProductKey(categoryId, productId, isChecked) {
