@@ -166,7 +166,7 @@ async function loadAllData() {
     }
   </style>
   </head>
-<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-50 font-display transition-colors duration-200" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO'); background-size: cover; background-position: center; background-attachment: fixed;">
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-50 font-display transition-colors duration-200">
 <div class="relative flex h-full w-full max-w-md mx-auto flex-col group/design-root overflow-x-hidden shadow-2xl bg-white dark:bg-slate-900 min-h-screen">
 <!-- Profile Header -->
 <div class="flex p-4 flex-col gap-4 items-center pt-8 pb-6 bg-gradient-to-b from-primary/5 to-transparent dark:from-primary/10 fade-in">
@@ -369,10 +369,14 @@ function updatePageContent() {
         profileAvatar.style.backgroundImage = `url("${siteData.profile.avatar}")`;
     }
 
-    // Update background image for entire page
-    if (siteData.backgroundImage) {
-        document.body.style.backgroundImage = `url("${siteData.backgroundImage}")`;
-        console.log('🎨 Background image updated:', siteData.backgroundImage);
+    // Update background image for main frame
+    const mainFrame = document.querySelector('.group\\/design-root');
+    if (mainFrame && siteData.backgroundImage) {
+        mainFrame.style.backgroundImage = `url("${siteData.backgroundImage}")`;
+        mainFrame.style.backgroundSize = 'cover';
+        mainFrame.style.backgroundPosition = 'center';
+        mainFrame.style.backgroundAttachment = 'fixed';
+        console.log('🎨 Background image updated for main frame:', siteData.backgroundImage);
     }
 
     // Update featured card with key product
