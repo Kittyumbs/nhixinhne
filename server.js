@@ -371,6 +371,48 @@ app.post('/api/upload/background', upload.single('background'), async (req, res)
   }
 });
 
+// Upload product image
+app.post('/api/upload/product-image', upload.single('productImage'), async (req, res) => {
+  console.log('📥 Product image upload request received');
+  console.log('📋 Request headers:', req.headers);
+  console.log('📋 Request body:', req.body);
+
+  try {
+    if (!req.file) {
+      console.log('❌ No file in request');
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const file = req.file;
+    const fileName = `product-${Date.now()}.${file.mimetype.split('/')[1]}`;
+
+    console.log('📁 Product image file details:', {
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size,
+      generatedName: fileName
+    });
+
+    const uploadResult = await uploadToGoogleDrive(
+      file.buffer,
+      fileName,
+      file.mimetype
+    );
+
+    console.log('✅ Product image upload completed successfully');
+    res.json({
+      success: true,
+      fileId: uploadResult.fileId,
+      publicUrl: uploadResult.publicUrl,
+      message: 'Product image uploaded successfully'
+    });
+
+  } catch (error) {
+    console.error('❌ Error in product image upload endpoint:', error);
+    res.status(500).json({ error: 'Failed to upload product image', details: error.message });
+  }
+});
+
 // Error handling middleware
 app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
