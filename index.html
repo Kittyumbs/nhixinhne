@@ -378,7 +378,11 @@ function updateFeaturedCard() {
         featuredCard.className = 'flex flex-col items-stretch justify-start rounded-2xl shadow-lg shadow-pink-100 dark:shadow-none bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 overflow-hidden transform transition-transform hover:scale-[1.01]';
 
         featuredCard.innerHTML = `
-            <div class="relative w-full h-48 bg-center bg-no-repeat bg-cover" style='background-image: url("${keyProduct.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO'}");'>
+            <div class="relative w-full h-48 bg-center bg-no-repeat bg-cover">
+                ${keyProduct.image
+                    ? `<div class="w-full h-full bg-center bg-no-repeat bg-cover" style='background-image: url("${keyProduct.image}");'></div>`
+                    : '<div class="w-full h-full bg-gradient-to-br from-blue-50 to-pink-50 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center"><span class="material-symbols-outlined text-6xl text-blue-200">shopping_bag</span></div>'
+                }
                 <div class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">
                     HOT DEAL
                 </div>
