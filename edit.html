@@ -88,6 +88,16 @@
   </style>
   </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-100 antialiased min-h-screen pb-24">
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl flex flex-col items-center gap-4">
+    <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    <div class="text-center">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white">Đang xuất bản...</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Vui lòng đợi trong giây lát</p>
+    </div>
+  </div>
+</div>
 <div class="sticky top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
 <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
 <div class="flex items-center gap-3">
@@ -839,6 +849,42 @@ async function saveToFirebase() {
                 }
             } else {
                 console.log('⚠️ [3.2/6] No background file selected, using default');
+            }
+
+            // Upload product image if selected
+            if (selectedProductFile) {
+                console.log('📤 [3.3/6] Uploading product image to backend...');
+                console.log('📄 Product image file details:', {
+                    name: selectedProductFile.name,
+                    type: selectedProductFile.type,
+                    size: selectedProductFile.size
+                });
+
+                const formData = new FormData();
+                formData.append('productImage', selectedProductFile);
+                console.log('📦 FormData created with product image file');
+
+                console.log('🌐 Making API call to /api/upload/product-image...');
+                // TODO: Update this URL to your Render backend URL
+                const BACKEND_URL = 'https://nhixinhne.onrender.com'; // Replace with actual Render URL
+                const response = await fetch(`${BACKEND_URL}/api/upload/product-image`, {
+                    method: 'POST',
+                    body: formData
+                });
+                console.log('📡 API response received:', { status: response.status, ok: response.ok });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Product image upload API response:', result);
+                    // Product image URL will be updated in uploadProductImage function
+                    console.log('💾 Product image URL will be saved to product data');
+                } else {
+                    const errorText = await response.text();
+                    console.error('❌ Product image upload failed - Response:', errorText);
+                    throw new Error(`Product image upload failed: ${response.status} ${response.statusText}`);
+                }
+            } else {
+                console.log('⚠️ [3.3/6] No product image selected');
             }
 
             console.log('✅ [3/6] Image upload process completed successfully');
