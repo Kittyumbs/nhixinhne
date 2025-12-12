@@ -201,7 +201,7 @@ async function loadAllData() {
 <span class="material-symbols-outlined mr-2">mail</span>
                 Liên hệ hợp tác
             </button>
-<p class="text-center text-slate-400 text-xs mt-4">© 2025 Mẹ Nhí Affiliate. dev by Nuttency</p>
+<p class="text-center text-slate-400 text-xs mt-4">© 2026 Mẹ Nhí Affiliate. dev by Nuttency</p>
 </div>
 <!-- Bottom Sheet Modal -->
 <div id="bottomSheet" class="fixed inset-x-0 bottom-0 z-50 transform translate-y-full transition-transform duration-300 ease-out bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl max-w-md mx-auto">
@@ -380,15 +380,14 @@ function updateFeaturedCard() {
         featuredCard.innerHTML = `
             <div class="relative w-full h-48 bg-center bg-no-repeat bg-cover" style='background-image: url("${keyProduct.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC8aAcLjxpyVZyPCmL72kiLClze8F-26nZRzXjNA-qmY4h-RzSJhNeTrZLXfhEr5bEkoErKSv2uzqv6I_Z1c0WGToWBBo8lmLUNeAu_LDe-B6S3W7w34pYYpdPQrqxAz8xq3TpZqdZYGIbp69Ua_oGY5QBQh5-87_vbnvnV7ZBjOqxAz-WTUZIAhSwh7ZlLA7pHlcbVbQ-UyX1jMuk4iQ_-RC6DX9nJz-Q_qINfaQcsZmJBDXDCP-yJdKV9S66Jyooe_Tw2Che6pEPO'}");'>
                 <div class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm animate-pulse">
-                    HOT DEAL -50%
+                    HOT DEAL
                 </div>
             </div>
             <div class="flex w-full grow flex-col items-stretch justify-center gap-2 p-4">
                 <p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">${keyProduct.name}</p>
                 <div class="flex flex-col gap-3">
-                    <p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Săn ngay deal hot từ ${keyCategory.name}. Nhấn để xem chi tiết!</p>
                     <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary hover:bg-pink-600 active:bg-pink-700 text-white text-sm font-bold leading-normal transition-colors shadow-md shadow-pink-200 dark:shadow-none key-product-btn" data-link="${keyProduct.link}">
-                        <span class="truncate mr-2">Săn Ngay</span>
+                        <span class="truncate mr-2">Xem Ngay</span>
                         <span class="material-symbols-outlined text-[18px]">shopping_bag</span>
                     </button>
                 </div>
