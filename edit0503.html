@@ -169,8 +169,8 @@
                     Danh mục
                 </h2>
 <div class="flex items-center gap-2">
-<button id="deleteCategoryBtn" class="text-red-500 text-sm font-bold flex items-center gap-1 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1.5 rounded-lg transition-colors opacity-50 cursor-not-allowed" disabled>
-<span class="material-symbols-outlined text-lg">delete</span> Xóa
+<button id="deleteSelectedCategoryBtn" class="text-red-500 text-sm font-bold flex items-center gap-1 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1.5 rounded-lg transition-colors opacity-50 cursor-not-allowed" disabled>
+<span class="material-symbols-outlined text-lg">delete</span> Xóa danh mục đã chọn
                     </button>
 <button id="addCategoryBtn" class="text-primary text-sm font-bold flex items-center gap-1 hover:bg-primary/5 px-2 py-1.5 rounded-lg transition-colors">
 <span class="material-symbols-outlined text-lg">add</span> Thêm mới
@@ -324,6 +324,7 @@ function setupEventListeners() {
     document.getElementById('cancelCategoryBtn').addEventListener('click', () => hideCategoryEditor());
     document.getElementById('saveCategoryBtn').addEventListener('click', () => saveCategory());
     document.getElementById('deleteCategoryBtn').addEventListener('click', () => deleteCategory());
+    document.getElementById('deleteSelectedCategoryBtn').addEventListener('click', () => deleteSelectedCategory());
 
     // Product management
     document.querySelector('.fixed button').addEventListener('click', () => addNewProduct());
@@ -359,7 +360,7 @@ function selectCategory(categoryId) {
     showCategoryProducts(categoryId);
 
     // Enable delete category button
-    const deleteBtn = document.getElementById('deleteCategoryBtn');
+    const deleteBtn = document.getElementById('deleteSelectedCategoryBtn');
     if (deleteBtn) {
         deleteBtn.disabled = false;
         deleteBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -512,6 +513,42 @@ function deleteCategory() {
         }
         loadCategories();
         hideCategoryEditor();
+    }
+}
+
+function deleteSelectedCategory() {
+    if (!selectedCategoryId) {
+        alert('Vui lòng chọn danh mục để xóa!');
+        return;
+    }
+
+    const category = categories.find(c => c.id === selectedCategoryId);
+    if (!category) return;
+
+    const confirmMessage = `Bạn có chắc muốn xóa danh mục "${category.name}" và tất cả ${category.products.length} sản phẩm trong đó?\n\nHành động này không thể hoàn tác!`;
+
+    if (confirm(confirmMessage)) {
+        // Remove category from array
+        categories = categories.filter(c => c.id !== selectedCategoryId);
+
+        // Reset selection and UI
+        selectedCategoryId = null;
+        document.getElementById('productsTitle').textContent = 'Chọn danh mục để xem sản phẩm';
+        document.getElementById('productsList').innerHTML = '';
+
+        // Disable delete button
+        const deleteBtn = document.getElementById('deleteSelectedCategoryBtn');
+        if (deleteBtn) {
+            deleteBtn.disabled = true;
+            deleteBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            deleteBtn.classList.remove('hover:bg-red-50', 'dark:hover:bg-red-900/20');
+        }
+
+        // Reload categories list
+        loadCategories();
+
+        console.log('🗑️ Category deleted successfully');
+        alert('Đã xóa danh mục thành công!');
     }
 }
 
