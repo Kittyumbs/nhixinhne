@@ -213,10 +213,19 @@ app.get('/api/categories', async (req, res) => {
 // Save site data (config + categories)
 app.post('/api/site-data', async (req, res) => {
   try {
+    console.log('📥 [POST /api/site-data] Request received');
+    console.log('📋 Request headers:', req.headers);
+    console.log('📋 Request body keys:', Object.keys(req.body || {}));
+
     const { profile, backgroundImage, categories } = req.body;
     const timestamp = new Date().toISOString();
 
-    console.log('💾 Saving site data...');
+    console.log('💾 [POST /api/site-data] Saving site data...');
+    console.log('📊 Data to save:', {
+      hasProfile: !!profile,
+      hasBackground: !!backgroundImage,
+      categoriesCount: categories?.length || 0
+    });
 
     // Save profile config
     if (profile) {
