@@ -852,7 +852,7 @@ async function saveToFirebase() {
             }
 
             // Upload product image if selected
-            if (selectedProductFile) {
+            if (selectedProductFile && editingProductId) {
                 console.log('📤 [3.3/6] Uploading product image to backend...');
                 console.log('📄 Product image file details:', {
                     name: selectedProductFile.name,
@@ -876,15 +876,27 @@ async function saveToFirebase() {
                 if (response.ok) {
                     const result = await response.json();
                     console.log('✅ Product image upload API response:', result);
-                    // Product image URL will be updated in uploadProductImage function
-                    console.log('💾 Product image URL will be saved to product data');
+
+                    // Update the product with the new image URL immediately
+                    const category = categories.find(cat => cat.products.some(prod => prod.id === editingProductId));
+                    if (category) {
+                        const product = category.products.find(prod => prod.id === editingProductId);
+                        if (product) {
+                            product.image = result.publicUrl;
+                            console.log('💾 Product image URL saved to product:', result.publicUrl);
+                        }
+                    }
+
+                    // Reset upload state
+                    selectedProductFile = null;
+                    editingProductId = null;
                 } else {
                     const errorText = await response.text();
                     console.error('❌ Product image upload failed - Response:', errorText);
                     throw new Error(`Product image upload failed: ${response.status} ${response.statusText}`);
                 }
             } else {
-                console.log('⚠️ [3.3/6] No product image selected');
+                console.log('⚠️ [3.3/6] No product image selected or no editing product');
             }
 
             console.log('✅ [3/6] Image upload process completed successfully');
