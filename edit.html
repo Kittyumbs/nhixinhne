@@ -388,7 +388,7 @@ function createProductCard(product, categoryId) {
             <div class="flex items-center justify-between mt-auto pt-1">
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2">
-                        <input type="radio" name="keyProduct" class="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary" ${product.isKey ? 'checked' : ''} onchange="setProductKey('${categoryId}', '${product.id}')">
+                        <input type="checkbox" class="w-4 h-4 text-primary bg-gray-100 border-gray-300 focus:ring-primary" ${product.isKey ? 'checked' : ''} onchange="setProductKey('${categoryId}', '${product.id}', this.checked)">
                         <span class="text-xs font-medium text-gray-500">Key</span>
                     </div>
                     <div class="flex items-center gap-2">
@@ -563,13 +563,18 @@ function updateProductLink(categoryId, productId, newLink) {
     const product = category.products.find(p => p.id === productId);
     product.link = newLink;
 
+    console.log('🔗 Link updated for product:', productId, 'Link:', newLink);
+
     // Auto-extract image from link if it's a known platform
     if (newLink && !product.image) {
+        console.log('🔍 Attempting to extract image from link...');
         const extractedImage = extractImageFromLink(newLink);
         if (extractedImage) {
-            product.image = extractedImage;
             console.log('🖼️ Auto-extracted image from link:', extractedImage);
+            product.image = extractedImage;
             showCategoryProducts(categoryId); // Refresh to show new image
+        } else {
+            console.log('⚠️ Could not auto-extract image from link. User can upload manually.');
         }
     }
 }
@@ -605,28 +610,28 @@ function extractImageFromLink(link) {
     }
 }
 
-function setProductKey(categoryId, productId) {
+function setProductKey(categoryId, productId, isChecked) {
     const category = categories.find(c => c.id === categoryId);
     const product = category.products.find(p => p.id === productId);
 
-    // If already key, uncheck it (allow off)
-    if (product.isKey) {
-        product.isKey = false;
-        console.log('🎯 Key product unset:', { categoryId, productId, productName: product.name });
-    } else {
-        // Clear all key flags first
+    if (isChecked) {
+        // Clear all key flags first (only one can be key)
         categories.forEach(cat => {
             cat.products.forEach(prod => {
                 prod.isKey = false;
             });
         });
 
-        // Set the selected product as key
+        // Set this product as key
         product.isKey = true;
         console.log('🎯 Key product set:', { categoryId, productId, productName: product.name });
+    } else {
+        // Uncheck this product
+        product.isKey = false;
+        console.log('🎯 Key product unset:', { categoryId, productId, productName: product.name });
     }
 
-    // Refresh the display to show the radio button state
+    // Refresh the display to show the checkbox state
     showCategoryProducts(categoryId);
 }
 
