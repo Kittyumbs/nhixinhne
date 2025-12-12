@@ -212,16 +212,22 @@ app.get('/api/categories', async (req, res) => {
 
 // Save site data (config + categories)
 app.post('/api/site-data', async (req, res) => {
+  console.log('🚀 [POST /api/site-data] ===== ENDPOINT CALLED =====');
   try {
     console.log('📥 [POST /api/site-data] Request received');
-    console.log('📋 Request headers:', req.headers);
+    console.log('📋 Request headers:', {
+      'content-type': req.headers['content-type'],
+      'content-length': req.headers['content-length'],
+      'user-agent': req.headers['user-agent']
+    });
     console.log('📋 Request body keys:', Object.keys(req.body || {}));
+    console.log('� Raw request body size:', JSON.stringify(req.body || {}).length, 'characters');
 
     const { profile, backgroundImage, categories } = req.body;
     const timestamp = new Date().toISOString();
 
     console.log('💾 [POST /api/site-data] Saving site data...');
-    console.log('📊 Data to save:', {
+    console.log('�📊 Data to save:', {
       hasProfile: !!profile,
       hasBackground: !!backgroundImage,
       categoriesCount: categories?.length || 0
