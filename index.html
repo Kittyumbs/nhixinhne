@@ -193,7 +193,7 @@ async function loadAllData() {
 </div>
 <div class="flex flex-col items-center justify-center gap-1">
 <div class="flex items-center gap-1.5">
-<p class="text-[#4e342e] text-[22px] font-bold leading-tight tracking-tight text-center" style="font-family: 'Pacifico', cursive;"></p>
+<p class="text-[#4e342e] text-[28px] font-bold leading-tight tracking-tight text-center" style="font-family: 'Pacifico', cursive;"></p>
 <span class="material-symbols-outlined text-blue-500 text-[20px]" title="Verified">verified</span>
 </div>
 <p class="text-white text-sm font-medium leading-normal text-center max-w-[280px]"></p>
@@ -567,10 +567,9 @@ function convertToDeepLink(url) {
 
             // Handle short links like https://vt.tiktok.com/ZSHwQ4kVA8VNo-FdENT/
             if (url.includes('vt.tiktok.com') || url.includes('vm.tiktok.com')) {
-                // For short links, create a custom redirect page that can bypass in-app browser
-                const redirectUrl = `https://tiktok-redirect.vercel.app/?url=${encodeURIComponent(url)}`;
-                console.log('📱 Short TikTok link detected, using redirect service:', redirectUrl);
-                return redirectUrl;
+                // For short links, use them directly - iframe method will handle app opening
+                console.log('📱 Short TikTok link detected, using direct URL for iframe method');
+                return url;
             }
 
             // Handle full URLs like https://www.tiktok.com/@username/video/123456789
