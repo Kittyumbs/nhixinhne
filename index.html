@@ -368,7 +368,7 @@ function updateFeaturedCard() {
             keyBtn.addEventListener('click', () => {
                 const link = keyBtn.getAttribute('data-link');
                 if (link) {
-                    window.open(link, '_blank');
+                    openSmartLink(link);
                 }
             });
         }
@@ -476,12 +476,12 @@ function initializeModal() {
                     </div>
                 `;
 
-                // Add click handler to open affiliate link
-                productCard.addEventListener('click', () => {
-                    if (product.link) {
-                        window.open(product.link, '_blank');
-                    }
-                });
+        // Add click handler to open affiliate link with smart redirect
+        productCard.addEventListener('click', () => {
+            if (product.link) {
+                openSmartLink(product.link);
+            }
+        });
 
                 productsGrid.appendChild(productCard);
             });
@@ -535,6 +535,227 @@ function initializeModal() {
             }
         });
     }
+}
+
+// Smart link opening function to bypass in-app browser limitations
+function openSmartLink(url) {
+    console.log('🔗 Attempting to open smart link:', url);
+
+    // Check if it's an in-app browser
+    const isInApp = isInAppBrowser();
+    console.log('📱 Is in-app browser:', isInApp);
+
+    if (isInApp) {
+        // Try multiple fallback methods for in-app browsers
+        tryMultipleRedirects(url);
+    } else {
+        // Standard browsers - use direct redirect (supports deep links)
+        window.location.href = url;
+    }
+}
+
+// Detect in-app browsers
+function isInAppBrowser() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // iOS detection
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        // Check for in-app browsers
+        return /FBAN|FBAV|Instagram|Messenger|Line|Twitter|WhatsApp|WeChat|Snapchat|TikTok|LinkedIn|Pinterest|Reddit/.test(userAgent);
+    }
+
+    // Android detection
+    if (/android/i.test(userAgent)) {
+        return /FBAN|FBAV|Instagram|Messenger|Line|Twitter|WhatsApp|WeChat|Snapchat|TikTok|LinkedIn|Pinterest|Reddit|wv|Version\/[\d\.]+/.test(userAgent);
+    }
+
+    return false;
+}
+
+// Try multiple redirect methods for in-app browsers
+function tryMultipleRedirects(url) {
+    console.log('🔄 Trying multiple redirect methods for in-app browser');
+
+    // Method 1: Try direct window.location.href (sometimes works)
+    try {
+        window.location.href = url;
+        console.log('✅ Method 1: Direct redirect attempted');
+    } catch (e) {
+        console.log('❌ Method 1 failed:', e);
+    }
+
+    // Method 2: Try window.open with _blank
+    setTimeout(() => {
+        try {
+            const newWindow = window.open(url, '_blank');
+            if (newWindow) {
+                console.log('✅ Method 2: Window.open successful');
+            } else {
+                console.log('⚠️ Method 2: Window.open blocked');
+                showBrowserWarning(url);
+            }
+        } catch (e) {
+            console.log('❌ Method 2 failed:', e);
+            showBrowserWarning(url);
+        }
+    }, 500);
+
+    // Method 3: Try iframe redirect (advanced technique)
+    setTimeout(() => {
+        try {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            document.body.appendChild(iframe);
+            console.log('✅ Method 3: Iframe redirect attempted');
+
+            // Clean up after 2 seconds
+            setTimeout(() => {
+                if (iframe.parentNode) {
+                    iframe.parentNode.removeChild(iframe);
+                }
+            }, 2000);
+        } catch (e) {
+            console.log('❌ Method 3 failed:', e);
+        }
+    }, 1000);
+}
+
+// Show warning when in-app browser detected
+function showBrowserWarning(url) {
+    console.log('⚠️ Showing browser warning for URL:', url);
+
+    // Check if warning already exists
+    if (document.getElementById('browserWarning')) {
+        return;
+    }
+
+    const warning = document.createElement('div');
+    warning.id = 'browserWarning';
+    warning.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
+    warning.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 max-w-sm mx-4 shadow-2xl">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-3xl text-blue-600">open_in_browser</span>
+                </div>
+                <h3 class="text-lg font-bold mb-4">Mở trong trình duyệt</h3>
+                <p class="text-sm text-gray-600 mb-6">
+                    Để trải nghiệm tốt nhất, vui lòng mở link này trong Safari hoặc Chrome.
+                </p>
+                <div class="flex gap-3">
+                    <button class="flex-1 bg-gray-200 py-3 rounded-lg text-sm font-medium" onclick="this.closest('.fixed').remove()">
+                        Bỏ qua
+                    </button>
+                    <button class="flex-1 bg-primary text-white py-3 rounded-lg text-sm font-bold" onclick="openInSystemBrowser('${url}')">
+                        Mở Safari
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(warning);
+
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+        if (warning.parentNode) {
+            warning.remove();
+        }
+    }, 10000);
+}
+
+// Open URL in system browser
+function openInSystemBrowser(url) {
+    console.log('🌐 Opening in system browser:', url);
+
+    // Remove warning
+    const warning = document.getElementById('browserWarning');
+    if (warning) {
+        warning.remove();
+    }
+
+    // iOS Safari redirect
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        // Try multiple iOS redirect methods
+        trySafariRedirect(url);
+    } else {
+        // Android Chrome redirect
+        tryAndroidRedirect(url);
+    }
+}
+
+// iOS Safari redirect methods
+function trySafariRedirect(url) {
+    // Method 1: Safari scheme
+    try {
+        window.location.href = `safari://open?url=${encodeURIComponent(url)}`;
+    } catch (e) {
+        console.log('Safari scheme failed, trying alternative');
+    }
+
+    // Method 2: Fallback to window.open
+    setTimeout(() => {
+        try {
+            window.open(url, '_blank');
+        } catch (e) {
+            console.log('All iOS redirect methods failed');
+            // Show final fallback
+            showFallbackLink(url);
+        }
+    }, 500);
+}
+
+// Android Chrome redirect methods
+function tryAndroidRedirect(url) {
+    // Method 1: Chrome intent
+    try {
+        window.location.href = `intent:${url}#Intent;scheme=https;package=com.android.chrome;end`;
+    } catch (e) {
+        console.log('Chrome intent failed, trying alternatives');
+    }
+
+    // Method 2: Fallback to window.open
+    setTimeout(() => {
+        try {
+            window.open(url, '_blank');
+        } catch (e) {
+            console.log('All Android redirect methods failed');
+            // Show final fallback
+            showFallbackLink(url);
+        }
+    }, 500);
+}
+
+// Final fallback - show clickable link
+function showFallbackLink(url) {
+    console.log('📋 Showing fallback link');
+
+    const fallback = document.createElement('div');
+    fallback.className = 'fixed bottom-4 left-4 right-4 bg-white rounded-lg p-4 shadow-lg border z-50';
+    fallback.innerHTML = `
+        <div class="flex items-center justify-between">
+            <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">Nhấn để mở sản phẩm</p>
+                <p class="text-xs text-gray-500 truncate">${url}</p>
+            </div>
+            <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold ml-3" onclick="window.open('${url}', '_blank'); this.closest('.fixed').remove();">
+                Mở
+            </button>
+        </div>
+        <button class="absolute top-2 right-2 text-gray-400" onclick="this.closest('.fixed').remove()">
+            <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+    `;
+
+    document.body.appendChild(fallback);
+
+    // Auto-remove after 15 seconds
+    setTimeout(() => {
+        if (fallback.parentNode) {
+            fallback.remove();
+        }
+    }, 15000);
 }
 </script>
 </body></html>
