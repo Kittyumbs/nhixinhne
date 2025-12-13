@@ -541,16 +541,65 @@ function initializeModal() {
 function openSmartLink(url) {
     console.log('🔗 Attempting to open smart link:', url);
 
+    // Convert to deep link if possible
+    const deepLink = convertToDeepLink(url);
+    console.log('🔄 Converted to deep link:', deepLink);
+
     // Check if it's an in-app browser
     const isInApp = isInAppBrowser();
     console.log('📱 Is in-app browser:', isInApp);
 
     if (isInApp) {
         // Try multiple fallback methods for in-app browsers
-        tryMultipleRedirects(url);
+        tryMultipleRedirects(deepLink);
     } else {
         // Standard browsers - use direct redirect (supports deep links)
-        window.location.href = url;
+        window.location.href = deepLink;
+    }
+}
+
+// Convert web URLs to deep links when possible
+function convertToDeepLink(url) {
+    try {
+        // TikTok deep link conversion
+        if (url.includes('tiktok.com') || url.includes('vt.tiktok.com') || url.includes('vm.tiktok.com')) {
+            console.log('🎵 TikTok link detected, attempting conversion');
+
+            // Handle short links like https://vt.tiktok.com/ZSHwQ4kVA8VNo-FdENT/
+            if (url.includes('vt.tiktok.com') || url.includes('vm.tiktok.com')) {
+                // For short links, create a custom redirect page that can bypass in-app browser
+                const redirectUrl = `https://tiktok-redirect.vercel.app/?url=${encodeURIComponent(url)}`;
+                console.log('📱 Short TikTok link detected, using redirect service:', redirectUrl);
+                return redirectUrl;
+            }
+
+            // Handle full URLs like https://www.tiktok.com/@username/video/123456789
+            const tiktokMatch = url.match(/tiktok\.com\/@([^\/]+)\/video\/(\d+)/);
+            if (tiktokMatch) {
+                const username = tiktokMatch[1];
+                const videoId = tiktokMatch[2];
+                const deepLink = `tiktok://video/${videoId}`;
+                console.log('🎵 Converted to TikTok deep link:', deepLink);
+                return deepLink;
+            }
+
+            // Fallback to web URL
+            console.log('⚠️ Could not convert TikTok URL, using web URL');
+            return url;
+        }
+
+        // Shopee deep link (already working)
+        if (url.includes('shopee.vn') || url.includes('shopee.com') || url.includes('shp.ee')) {
+            console.log('🛒 Shopee link detected, using web URL (works well)');
+            return url;
+        }
+
+        // Other platforms - use as-is
+        return url;
+
+    } catch (error) {
+        console.error('❌ Error converting to deep link:', error);
+        return url; // Fallback to original URL
     }
 }
 
@@ -576,49 +625,77 @@ function isInAppBrowser() {
 function tryMultipleRedirects(url) {
     console.log('🔄 Trying multiple redirect methods for in-app browser');
 
-    // Method 1: Try direct window.location.href (sometimes works)
+    // Method 1: Try iframe redirect first (most effective for in-app browsers)
     try {
-        window.location.href = url;
-        console.log('✅ Method 1: Direct redirect attempted');
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+        console.log('✅ Method 1: Iframe redirect attempted');
+
+        // Clean up after 3 seconds
+        setTimeout(() => {
+            if (iframe.parentNode) {
+                iframe.parentNode.removeChild(iframe);
+            }
+        }, 3000);
     } catch (e) {
         console.log('❌ Method 1 failed:', e);
     }
 
-    // Method 2: Try window.open with _blank
+    // Method 2: Try direct window.location.href
     setTimeout(() => {
         try {
-            const newWindow = window.open(url, '_blank');
-            if (newWindow) {
-                console.log('✅ Method 2: Window.open successful');
-            } else {
-                console.log('⚠️ Method 2: Window.open blocked');
-                showBrowserWarning(url);
-            }
+            window.location.href = url;
+            console.log('✅ Method 2: Direct redirect attempted');
         } catch (e) {
             console.log('❌ Method 2 failed:', e);
-            showBrowserWarning(url);
         }
     }, 500);
 
-    // Method 3: Try iframe redirect (advanced technique)
+    // Method 3: Try popup window (last resort)
     setTimeout(() => {
         try {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = url;
-            document.body.appendChild(iframe);
-            console.log('✅ Method 3: Iframe redirect attempted');
-
-            // Clean up after 2 seconds
-            setTimeout(() => {
-                if (iframe.parentNode) {
-                    iframe.parentNode.removeChild(iframe);
-                }
-            }, 2000);
+            const popup = window.open(url, '_blank', 'width=1,height=1,left=0,top=0');
+            if (popup) {
+                console.log('✅ Method 3: Popup window successful');
+                // Close popup after 1 second
+                setTimeout(() => {
+                    if (popup && !popup.closed) {
+                        popup.close();
+                    }
+                }, 1000);
+            } else {
+                console.log('⚠️ Method 3: Popup blocked');
+                showBrowserWarning(url);
+            }
         } catch (e) {
             console.log('❌ Method 3 failed:', e);
+            showBrowserWarning(url);
         }
     }, 1000);
+
+    // Method 4: Try meta refresh redirect (final fallback)
+    setTimeout(() => {
+        try {
+            const meta = document.createElement('meta');
+            meta.httpEquiv = 'refresh';
+            meta.content = `0;url=${url}`;
+            document.head.appendChild(meta);
+            console.log('✅ Method 4: Meta refresh attempted');
+
+            // Clean up meta tag
+            setTimeout(() => {
+                if (meta.parentNode) {
+                    meta.parentNode.removeChild(meta);
+                }
+            }, 1000);
+        } catch (e) {
+            console.log('❌ Method 4 failed:', e);
+        }
+    }, 1500);
 }
 
 // Show warning when in-app browser detected
