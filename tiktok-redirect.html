@@ -142,8 +142,8 @@
         <p class="subtitle">Xem video trong ứng dụng TikTok</p>
 
         <div class="buttons">
-            <button id="openTikTokBtn" class="btn btn-primary">
-                <span id="btnText">Mở trong TikTok</span>
+            <button id="openExternalBtn" class="btn btn-primary">
+                <span id="btnText">Mở bằng trình duyệt</span>
                 <span id="btnLoading" class="loading hidden"></span>
             </button>
 
@@ -154,7 +154,7 @@
         </div>
 
         <div id="instructions" class="instructions hidden">
-            <strong>Mẹo:</strong> Trong app Messenger/Instagram, bấm vào 3 chấm (⋯) ở góc phải → <strong>Mở trong trình duyệt</strong> để tự động mở app TikTok.
+            <strong>Hướng dẫn:</strong> Trong app Messenger/Instagram/TikTok, bấm vào 3 chấm (⋯) ở góc phải → <strong>Mở trong trình duyệt</strong> để tự động mở app TikTok.
         </div>
     </div>
 
@@ -219,9 +219,10 @@
             console.log('🌐 Browser environment:', browserEnv);
             console.log('🔗 TikTok URL:', tiktokUrl);
 
-            trackEvent('page_view', {
+            trackEvent('view_go_page', {
                 browser_type: browserEnv.isInAppBrowser ? 'in_app' : 'external',
-                user_agent: browserEnv.userAgent.substring(0, 100)
+                user_agent: browserEnv.userAgent.substring(0, 100),
+                url: tiktokUrl
             });
 
             // If no URL provided, redirect to TikTok app store
@@ -245,7 +246,7 @@
                 return;
             }
 
-            // In-app browser - show landing page
+            // In-app browser - show landing page with options
             console.log('📱 In-app browser detected, showing landing page');
             document.getElementById('instructions').classList.remove('hidden');
 
@@ -254,34 +255,22 @@
         });
 
         function setupButtonHandlers(tiktokUrl, browserEnv) {
-            const openBtn = document.getElementById('openTikTokBtn');
+            const openBtn = document.getElementById('openExternalBtn');
             const copyBtn = document.getElementById('copyLinkBtn');
             const btnText = document.getElementById('btnText');
             const btnLoading = document.getElementById('btnLoading');
 
-            // Open TikTok button
-            openBtn.addEventListener('click', async function() {
-                console.log('🎵 Opening TikTok...');
-                trackEvent('click_open_tiktok', { url: tiktokUrl });
+            // Open external browser button
+            openBtn.addEventListener('click', function() {
+                console.log('🌐 Opening external browser...');
+                trackEvent('click_open_external_browser', { url: tiktokUrl });
 
                 // Show loading
                 btnText.textContent = 'Đang mở...';
                 btnLoading.classList.remove('hidden');
 
-                try {
-                    // Try deep link first
-                    await tryDeepLink(tiktokUrl, browserEnv);
-
-                    // If deep link doesn't work, fallback to web URL
-                    setTimeout(() => {
-                        window.location.href = tiktokUrl;
-                    }, 1000);
-
-                } catch (error) {
-                    console.error('Error opening TikTok:', error);
-                    // Fallback to web URL
-                    window.location.href = tiktokUrl;
-                }
+                // Attempt to open external browser
+                openExternal(tiktokUrl, browserEnv);
             });
 
             // Copy link button
@@ -314,6 +303,71 @@
                     }, 2000);
                 }
             });
+        }
+
+        // Build Chrome intent URL for Android
+        function buildChromeIntent(httpsUrl) {
+            const u = new URL(httpsUrl);
+            const fallback = encodeURIComponent(httpsUrl);
+            return `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${fallback};end`;
+        }
+
+        // Open external browser
+        function openExternal(httpsUrl, browserEnv) {
+            const ua = navigator.userAgent || '';
+            const isAndroid = /Android/i.test(ua);
+            const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+            console.log('🌐 Attempting to open external browser:', { isAndroid, isIOS, url: httpsUrl });
+
+            if (isAndroid) {
+                // Android: attempt Chrome intent
+                try {
+                    const intentUrl = buildChromeIntent(httpsUrl);
+                    console.log('🤖 Android Chrome intent:', intentUrl);
+                    trackEvent('open_external_attempt_android', { intent_url: intentUrl });
+
+                    window.location.href = intentUrl;
+
+                    // Track success (best effort)
+                    setTimeout(() => {
+                        trackEvent('open_external_attempt_success', { platform: 'android' });
+                    }, 1000);
+
+                } catch (error) {
+                    console.error('❌ Android intent failed:', error);
+                    // Fallback to direct URL
+                    window.location.href = httpsUrl;
+                }
+                return;
+            }
+
+            if (isIOS) {
+                // iOS: best effort with new tab (may still stay in webview)
+                try {
+                    console.log('🍎 iOS attempt with window.open');
+                    trackEvent('open_external_attempt_ios', { method: 'window_open' });
+
+                    const w = window.open(httpsUrl, '_blank');
+                    if (!w) {
+                        console.log('⚠️ window.open blocked, trying direct redirect');
+                        trackEvent('open_external_attempt_ios', { method: 'direct_redirect' });
+                        window.location.href = httpsUrl;
+                    } else {
+                        trackEvent('open_external_attempt_success', { platform: 'ios' });
+                    }
+                } catch (error) {
+                    console.error('❌ iOS attempt failed:', error);
+                    // Fallback
+                    window.location.href = httpsUrl;
+                }
+                return;
+            }
+
+            // Fallback for other platforms
+            console.log('🔄 Fallback: direct redirect');
+            trackEvent('open_external_attempt_fallback', { platform: 'unknown' });
+            window.location.href = httpsUrl;
         }
 
         async function tryDeepLink(url, browserEnv) {
