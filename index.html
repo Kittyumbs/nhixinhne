@@ -464,8 +464,12 @@ function initializeModal() {
             `;
         } else {
             products.forEach(product => {
-                const productCard = document.createElement('div');
+                const productCard = document.createElement('a');
                 productCard.className = 'group flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-lg hover:shadow-pink-100 dark:hover:shadow-none transition-all duration-300 fade-in';
+                productCard.href = product.link || '#';
+                productCard.target = '_blank';
+                productCard.rel = 'noopener noreferrer';
+                productCard.style.textDecoration = 'none';
 
                 productCard.innerHTML = `
                     <div class="relative w-full aspect-square bg-slate-50 dark:bg-slate-700 overflow-hidden">
@@ -476,12 +480,13 @@ function initializeModal() {
                     </div>
                 `;
 
-        // Add click handler to open affiliate link with smart redirect
-        productCard.addEventListener('click', () => {
-            if (product.link) {
-                openSmartLink(product.link);
-            }
-        });
+                // Add click handler to override default behavior for smart redirect
+                if (product.link) {
+                    productCard.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openSmartLink(product.link);
+                    });
+                }
 
                 productsGrid.appendChild(productCard);
             });
