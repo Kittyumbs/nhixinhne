@@ -229,7 +229,7 @@ async function loadAllData() {
 <div id="modalBackdrop" class="fixed inset-0 bg-black/50 z-40 opacity-0 pointer-events-none transition-opacity duration-300"></div>
 
 <!-- Bottom Sheet Modal -->
-<div id="bottomSheet" class="fixed inset-x-0 bottom-0 z-50 transform translate-y-full transition-transform duration-300 ease-out bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl max-w-md mx-auto">
+<div id="bottomSheet" class="fixed inset-x-0 bottom-0 z-50 h-[80vh] flex flex-col transform translate-y-full transition-transform duration-300 ease-out bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl max-w-md mx-auto">
 <div class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 pb-3 border-b border-slate-100 dark:border-slate-800 rounded-t-3xl">
 <!-- Default Header -->
 <div id="headerDefault" class="flex items-center justify-between">
@@ -256,7 +256,7 @@ async function loadAllData() {
 </button>
 </div>
 </div>
-<div class="overflow-y-auto" style="max-height: 64vh;">
+<div class="flex-1 overflow-y-auto">
 <div class="grid grid-cols-2 gap-4 p-4 pb-8" id="productsGrid">
 <!-- Products will be loaded dynamically -->
 </div>
