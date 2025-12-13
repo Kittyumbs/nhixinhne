@@ -561,31 +561,14 @@ function openSmartLink(url) {
 // Convert web URLs to deep links when possible
 function convertToDeepLink(url) {
     try {
-        // TikTok deep link conversion
+        // TikTok - force open in system browser
         if (url.includes('tiktok.com') || url.includes('vt.tiktok.com') || url.includes('vm.tiktok.com')) {
-            console.log('🎵 TikTok link detected, attempting conversion');
+            console.log('🎵 TikTok link detected, forcing system browser redirect');
 
-            // Handle short links like https://vt.tiktok.com/ZSHwQ4kVA8VNo-FdENT/
-            if (url.includes('vt.tiktok.com') || url.includes('vm.tiktok.com')) {
-                // For short links, use smart redirect page
-                const redirectUrl = `tiktok-redirect.html?url=${encodeURIComponent(url)}`;
-                console.log('📱 Short TikTok link detected, using smart redirect page:', redirectUrl);
-                return redirectUrl;
-            }
-
-            // Handle full URLs like https://www.tiktok.com/@username/video/123456789
-            const tiktokMatch = url.match(/tiktok\.com\/@([^\/]+)\/video\/(\d+)/);
-            if (tiktokMatch) {
-                const username = tiktokMatch[1];
-                const videoId = tiktokMatch[2];
-                const deepLink = `tiktok://video/${videoId}`;
-                console.log('🎵 Converted to TikTok deep link:', deepLink);
-                return deepLink;
-            }
-
-            // Fallback to web URL
-            console.log('⚠️ Could not convert TikTok URL, using web URL');
-            return url;
+            // Create a special URL that will force system browser
+            const systemBrowserUrl = createSystemBrowserRedirect(url);
+            console.log('🌐 System browser redirect URL:', systemBrowserUrl);
+            return systemBrowserUrl;
         }
 
         // Shopee deep link (already working)
@@ -601,6 +584,24 @@ function convertToDeepLink(url) {
         console.error('❌ Error converting to deep link:', error);
         return url; // Fallback to original URL
     }
+}
+
+// Create system browser redirect URL
+function createSystemBrowserRedirect(url) {
+    const userAgent = navigator.userAgent;
+
+    // iOS - use safari://open
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return `safari://open?url=${encodeURIComponent(url)}`;
+    }
+
+    // Android - use intent
+    if (/android/i.test(userAgent)) {
+        return `intent:${url}#Intent;scheme=https;package=com.android.chrome;end`;
+    }
+
+    // Fallback for other devices
+    return url;
 }
 
 // Detect in-app browsers
