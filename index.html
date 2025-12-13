@@ -230,7 +230,9 @@ async function loadAllData() {
 
 <!-- Bottom Sheet Modal -->
 <div id="bottomSheet" class="fixed inset-x-0 bottom-0 z-50 transform translate-y-full transition-transform duration-300 ease-out bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl max-w-md mx-auto">
-<div class="sticky top-0 z-50 flex items-center bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 pb-3 justify-between border-b border-slate-100 dark:border-slate-800 rounded-t-3xl">
+<div class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 pb-3 border-b border-slate-100 dark:border-slate-800 rounded-t-3xl">
+<!-- Default Header -->
+<div id="headerDefault" class="flex items-center justify-between">
 <button id="closeModal" class="text-slate-700 dark:text-slate-200 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
 <span class="material-symbols-outlined text-[24px]">close</span>
 </button>
@@ -241,6 +243,18 @@ async function loadAllData() {
 <button id="searchBtn" class="text-slate-700 dark:text-slate-200 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
 <span class="material-symbols-outlined text-[24px]">search</span>
 </button>
+</div>
+
+<!-- Search Header -->
+<div id="headerSearch" class="flex items-center justify-between hidden">
+<button id="searchIcon" class="text-slate-700 dark:text-slate-200 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+<input id="searchInput" type="text" placeholder="Tìm kiếm sản phẩm..." class="flex-1 mx-4 bg-transparent border-none outline-none text-slate-900 dark:text-white placeholder-slate-400">
+<button id="closeSearch" class="text-slate-700 dark:text-slate-200 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+</div>
 </div>
 <div class="overflow-y-auto" style="max-height: 64vh;">
 <div class="grid grid-cols-2 gap-4 p-4 pb-8" id="productsGrid">
@@ -396,7 +410,13 @@ function initializeModal() {
     const openButtons = document.querySelectorAll('.open-modal');
 
     let currentCategoryProducts = [];
-    let searchMode = false;
+    let isSearchMode = false;
+
+    // Header elements
+    const headerDefault = document.getElementById('headerDefault');
+    const headerSearch = document.getElementById('headerSearch');
+    const searchInput = document.getElementById('searchInput');
+    const closeSearchBtn = document.getElementById('closeSearch');
 
     // Open modal function
     function openModal(categoryName) {
@@ -420,7 +440,8 @@ function initializeModal() {
 
         // Lock body scroll
         document.body.style.overflow = 'hidden';
-        searchMode = false;
+        isSearchMode = false;
+        exitSearchMode(); // Ensure default header is shown
 
         console.log('🚀 Modal opened for category:', categoryName);
     }
@@ -441,10 +462,41 @@ function initializeModal() {
             setTimeout(() => {
                 backdrop.classList.add('pointer-events-none');
                 document.body.style.overflow = 'auto';
-                searchMode = false;
+                isSearchMode = false;
+                exitSearchMode(); // Reset to default header
                 console.log('✅ Modal fully closed');
             }, 300); // Wait for backdrop fade out
         }, 50); // Small delay to ensure modal starts hiding
+    }
+
+    // Enter search mode
+    function enterSearchMode() {
+        console.log('🔍 Entering search mode');
+        headerDefault.classList.add('hidden');
+        headerSearch.classList.remove('hidden');
+        isSearchMode = true;
+
+        // Focus input after a short delay to ensure it's visible
+        setTimeout(() => {
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.value = ''; // Clear any previous search
+            }
+        }, 100);
+    }
+
+    // Exit search mode
+    function exitSearchMode() {
+        console.log('❌ Exiting search mode');
+        headerSearch.classList.add('hidden');
+        headerDefault.classList.remove('hidden');
+        isSearchMode = false;
+
+        // Clear search and show all products
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        updateProductsDisplay(currentCategoryProducts);
     }
 
     // Open modal event listeners
@@ -474,20 +526,39 @@ function initializeModal() {
         });
     }
 
-    // Search functionality
+    // Search button - enter search mode
     if (searchBtn) {
         searchBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            if (searchMode) {
-                // Exit search mode
+            enterSearchMode();
+        });
+    }
+
+    // Close search button - exit search mode
+    if (closeSearchBtn) {
+        closeSearchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            exitSearchMode();
+        });
+    }
+
+    // Search input - realtime filtering
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            console.log('🔎 Searching for:', query);
+
+            if (query === '') {
+                // Show all products when search is empty
                 updateProductsDisplay(currentCategoryProducts);
-                searchBtn.innerHTML = '<span class="material-symbols-outlined text-[24px]">search</span>';
-                searchMode = false;
             } else {
-                // Enter search mode
-                showSearchInput();
-                searchMode = true;
+                // Filter products
+                const filteredProducts = currentCategoryProducts.filter(product =>
+                    product.name.toLowerCase().includes(query)
+                );
+                updateProductsDisplay(filteredProducts);
             }
         });
     }
