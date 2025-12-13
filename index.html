@@ -225,6 +225,9 @@ async function loadAllData() {
             </a>
 <p class="text-center text-slate-400 text-xs mt-4">© 2026 Mẹ Nhí Affiliate. dev by Nuttency</p>
 </div>
+<!-- Modal Backdrop -->
+<div id="modalBackdrop" class="fixed inset-0 bg-black/50 z-40 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
 <!-- Bottom Sheet Modal -->
 <div id="bottomSheet" class="fixed inset-x-0 bottom-0 z-50 transform translate-y-full transition-transform duration-300 ease-out bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl max-w-md mx-auto">
 <div class="sticky top-0 z-50 flex items-center bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 pb-3 justify-between border-b border-slate-100 dark:border-slate-800 rounded-t-3xl">
@@ -385,6 +388,7 @@ function updateFeaturedCard() {
 
 function initializeModal() {
     const modal = document.getElementById('bottomSheet');
+    const backdrop = document.getElementById('modalBackdrop');
     const closeBtn = document.getElementById('closeModal');
     const searchBtn = document.getElementById('searchBtn');
     const categoryTitle = document.getElementById('categoryTitle');
@@ -394,35 +398,79 @@ function initializeModal() {
     let currentCategoryProducts = [];
     let searchMode = false;
 
+    // Open modal function
+    function openModal(categoryName) {
+        const category = siteData.categories.find(c => c.name === categoryName);
+        if (!category) return;
+
+        categoryTitle.textContent = categoryName;
+        currentCategoryProducts = category.products.filter(p => p.visible);
+
+        // Update product count
+        const count = currentCategoryProducts.length;
+        productCount.textContent = `${count} sản phẩm`;
+
+        // Update modal products
+        updateProductsDisplay(currentCategoryProducts);
+
+        // Show backdrop and modal
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        backdrop.classList.add('opacity-100');
+        modal.classList.remove('translate-y-full');
+
+        // Lock body scroll
+        document.body.style.overflow = 'hidden';
+        searchMode = false;
+
+        console.log('🚀 Modal opened for category:', categoryName);
+    }
+
+    // Close modal function
+    function closeModal() {
+        console.log('🔴 Closing modal');
+
+        // Hide modal with transition
+        modal.classList.add('translate-y-full');
+
+        // Backdrop keeps pointer-events for ~350ms to prevent click-through
+        setTimeout(() => {
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+
+            // Disable pointer-events after fade out
+            setTimeout(() => {
+                backdrop.classList.add('pointer-events-none');
+                document.body.style.overflow = 'auto';
+                searchMode = false;
+                console.log('✅ Modal fully closed');
+            }, 300); // Wait for backdrop fade out
+        }, 50); // Small delay to ensure modal starts hiding
+    }
+
+    // Open modal event listeners
     openButtons.forEach(button => {
         button.addEventListener('click', function() {
             const categoryName = this.getAttribute('data-category');
-            const category = siteData.categories.find(c => c.name === categoryName);
-
-            categoryTitle.textContent = categoryName;
-            currentCategoryProducts = category.products.filter(p => p.visible);
-
-            // Update product count
-            const count = currentCategoryProducts.length;
-            productCount.textContent = `${count} sản phẩm`;
-
-            // Update modal products
-            updateProductsDisplay(currentCategoryProducts);
-
-            modal.classList.remove('translate-y-full');
-            document.body.style.overflow = 'hidden';
-            searchMode = false;
+            openModal(categoryName);
         });
     });
 
+    // Close modal event listeners
     if (closeBtn) {
         closeBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('🔴 Close button clicked - closing modal');
-            modal.classList.add('translate-y-full');
-            document.body.style.overflow = 'auto';
-            searchMode = false;
+            closeModal();
+        });
+    }
+
+    // Click backdrop to close
+    if (backdrop) {
+        backdrop.addEventListener('click', function(e) {
+            if (e.target === backdrop) {
+                console.log('🌫️ Backdrop clicked - closing modal');
+                closeModal();
+            }
         });
     }
 
@@ -440,19 +488,6 @@ function initializeModal() {
                 // Enter search mode
                 showSearchInput();
                 searchMode = true;
-            }
-        });
-    }
-
-    // Close modal when clicking outside
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            console.log('🖱️ Modal clicked, target:', e.target, 'modal element:', modal);
-            if (e.target === modal) {
-                console.log('🌫️ Clicking outside modal - closing');
-                modal.classList.add('translate-y-full');
-                document.body.style.overflow = 'auto';
-                searchMode = false;
             }
         });
     }
