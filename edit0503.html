@@ -339,8 +339,10 @@ function setupEventListeners() {
     // Publish/Save functionality
     document.getElementById('publishBtn').addEventListener('click', () => saveToFirebase());
 
-    // Preview functionality
-    document.querySelector('button[title="Xem thử"]').addEventListener('click', () => openPreviewModal());
+    // Preview functionality - redirect to index.html with back parameter
+    document.querySelector('button[title="Xem thử"]').addEventListener('click', () => {
+        window.location.href = 'index.html?from=edit0503';
+    });
 }
 
 function loadCategories() {

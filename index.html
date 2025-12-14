@@ -43,7 +43,20 @@
   window.setDoc = setDoc;
 
 // Load data directly from Firebase when page loads
-document.addEventListener('DOMContentLoaded', loadAllData);
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if coming from edit0503.html
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('from') === 'edit0503') {
+        document.getElementById('backButton').classList.remove('hidden');
+    }
+
+    loadAllData();
+});
+
+// Function to go back to edit page
+function goBackToEdit() {
+    window.location.href = 'edit0503.html';
+}
 
 // Load both config and categories data from Firebase
 async function loadAllData() {
@@ -180,6 +193,12 @@ async function loadAllData() {
   </style>
   </head>
 <body class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-slate-50 font-display transition-colors duration-200">
+<!-- Back Button (only shown when coming from edit0503) -->
+<div id="backButton" class="fixed top-4 left-4 z-50 hidden">
+  <button onclick="goBackToEdit()" class="bg-black/20 backdrop-blur-sm text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
+    <span class="material-symbols-outlined text-xl">arrow_back</span>
+  </button>
+</div>
 <!-- Splash Screen -->
 <div id="splashScreen" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center">
   <div class="text-center">
