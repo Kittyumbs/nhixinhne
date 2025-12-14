@@ -197,7 +197,7 @@ async function loadAllData() {
 <p class="text-[#4e342e] text-[32px] font-bold leading-tight tracking-tight text-center" style="font-family: 'Pacifico', cursive;"></p>
 <span class="material-symbols-outlined text-blue-500 text-[20px]" title="Verified">verified</span>
 </div>
-<p class="text-white text-[28px] text-sm font-medium leading-normal text-center max-w-[280px]"></p>
+<p class="text-white text-[32px] text-sm font-medium leading-normal text-center max-w-[350px]"></p>
 </div>
 </div>
 <!-- Featured Card (Key Product) -->
@@ -309,7 +309,7 @@ function updatePageContent() {
 
         siteData.categories.forEach((category, index) => {
             const categoryBtn = document.createElement('button');
-            categoryBtn.className = 'group flex items-center gap-4 bg-amber-100 p-3 pr-4 rounded-xl shadow-sm border border-amber-200 hover:bg-amber-200 transition-all active:scale-[0.98] fade-in open-modal';
+            categoryBtn.className = 'group flex items-center gap-4 bg-amber-500 p-3 pr-4 rounded-xl shadow-sm border border-amber-200 hover:bg-amber-200 transition-all active:scale-[0.98] fade-in open-modal';
             categoryBtn.style.animationDelay = `${0.2 + index * 0.1}s`;
             categoryBtn.setAttribute('data-category', category.name);
 
