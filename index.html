@@ -42,6 +42,12 @@
   window.getDoc = getDoc;
   window.setDoc = setDoc;
 
+// Function to go back to edit page
+function goBackToEdit() {
+    console.log('🔙 Going back to edit page...');
+    window.location.href = 'edit0503.html';
+}
+
 // Load data directly from Firebase when page loads
 document.addEventListener('DOMContentLoaded', function() {
     // Check if coming from edit0503.html
@@ -52,11 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadAllData();
 });
-
-// Function to go back to edit page
-function goBackToEdit() {
-    window.location.href = 'edit0503.html';
-}
 
 // Load both config and categories data from Firebase
 async function loadAllData() {
