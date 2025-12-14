@@ -309,7 +309,7 @@ function updatePageContent() {
 
         siteData.categories.forEach((category, index) => {
             const categoryBtn = document.createElement('button');
-            categoryBtn.className = 'group flex items-center gap-4 bg-[#4e342e] p-3 pr-4 rounded-xl shadow-lg border border-[#4e342e] hover:bg-[#EBBE5E] hover:shadow-xl transition-all active:scale-[0.98] fade-in open-modal';
+            categoryBtn.className = 'group flex items-center gap-4 bg-[#4e342e] p-3 pr-4 rounded-xl shadow-sm border border-[#4e342e] hover:bg-[#EBBE5E] transition-all active:scale-[0.98] fade-in open-modal';
             categoryBtn.style.animationDelay = `${0.2 + index * 0.1}s`;
             categoryBtn.setAttribute('data-category', category.name);
 
