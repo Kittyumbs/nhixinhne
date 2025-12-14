@@ -93,7 +93,7 @@
   <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl flex flex-col items-center gap-4">
     <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
     <div class="text-center">
-      <h3 class="text-lg font-bold text-gray-900 dark:text-white">Đang xuất bản...</h3>
+      <h3 id="loadingText" class="text-lg font-bold text-gray-900 dark:text-white">Đang tải dữ liệu...</h3>
       <p class="text-sm text-gray-600 dark:text-gray-400">Vui lòng đợi trong giây lát</p>
     </div>
   </div>
@@ -170,7 +170,7 @@
                 </h2>
 <div class="flex items-center gap-2">
 <button id="deleteSelectedCategoryBtn" class="text-red-500 text-sm font-bold flex items-center gap-1 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1.5 rounded-lg transition-colors opacity-50 cursor-not-allowed" disabled>
-<span class="material-symbols-outlined text-lg">delete</span> Xóa danh mục đã chọn
+<span class="material-symbols-outlined text-lg">delete</span> Xóa danh mục
                     </button>
 <button id="addCategoryBtn" class="text-primary text-sm font-bold flex items-center gap-1 hover:bg-primary/5 px-2 py-1.5 rounded-lg transition-colors">
 <span class="material-symbols-outlined text-lg">add</span> Thêm mới
@@ -246,15 +246,23 @@ document.addEventListener('DOMContentLoaded', function() {
 async function initializeApp() {
     console.log('🚀 Initializing Nhixinhne Admin Dashboard...');
 
-    // Load existing data from backend first
-    await loadExistingData();
+    // Show loading overlay during data loading
+    showLoadingOverlay();
 
-    // Initialize app functionality
-    loadCategories();
-    setupEventListeners();
-    renderIconSelector();
+    try {
+        // Load existing data from backend first
+        await loadExistingData();
 
-    console.log('✅ App initialized successfully');
+        // Initialize app functionality
+        loadCategories();
+        setupEventListeners();
+        renderIconSelector();
+
+        console.log('✅ App initialized successfully');
+    } finally {
+        // Hide loading overlay
+        hideLoadingOverlay();
+    }
 }
 
 // Global variables to store existing data
@@ -345,7 +353,7 @@ function loadCategories() {
 
 function createCategoryButton(category) {
     const button = document.createElement('button');
-    button.className = `flex-shrink-0 snap-start ${selectedCategoryId === category.id ? 'bg-primary text-white' : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300'} pl-3 pr-4 py-2 rounded-lg font-semibold text-sm border border-transparent hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2 transition-colors`;
+    button.className = `flex-shrink-0 snap-start ${selectedCategoryId === category.id ? 'bg-primary/10 text-primary border-primary' : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-transparent'} pl-3 pr-4 py-2 rounded-lg font-semibold text-sm border hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center gap-2 transition-colors`;
     button.innerHTML = `
         <span class="material-symbols-outlined text-lg">${category.icon}</span>
         ${category.name}
@@ -828,9 +836,11 @@ async function wakeUpServer() {
 
 // Save all data to backend API
 async function saveToFirebase() {
-    // Show loading overlay
+    // Show loading overlay with publishing text
     const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
+    const loadingText = document.getElementById('loadingText');
+    if (overlay && loadingText) {
+        loadingText.textContent = 'Đang xuất bản...';
         overlay.classList.remove('hidden');
         overlay.classList.add('flex');
         document.body.style.overflow = 'hidden';
@@ -1166,6 +1176,25 @@ async function uploadProductImage() {
     } catch (error) {
         console.error('❌ Error uploading product image:', error);
         return null;
+    }
+}
+
+// Loading overlay helpers
+function showLoadingOverlay() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+        document.body.style.overflow = 'auto';
     }
 }
 
